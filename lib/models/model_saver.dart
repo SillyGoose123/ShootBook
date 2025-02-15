@@ -16,6 +16,21 @@ class ModelSaver {
     _instance ??= ModelSaver._create(await getApplicationDocumentsDirectory());
     return _instance!;
   }
+  
+  Future<void> _writeToFiles() async {
+    for(ResultType type in _storedResults.keys) {
+      for (Result result in _storedResults[type]!) {
+        await File(_directory.path + result.toFileString()).writeAsString(jsonEncode(result.toJson()));
+      }
+    }
+
+  }
+
+  void saveAll(List<Result> results) {
+    for(Result res in results) {
+      save(res);
+    }
+  }
 
   void save(Result result) {
     if (_storedResults[result.type] != null &&
@@ -25,12 +40,27 @@ class ModelSaver {
 
     if (_storedResults[result.type] != null) _storedResults[result.type] = [];
     _storedResults[result.type]!.add(result);
+
+    _writeToFiles();
   }
 
-  //TODO: implement comment edit
-  void edit() {}
+  void edit(Result result) {
+    int index = _storedResults[result.type]!.indexWhere((Result res) => res.value == result.value && res.timestamp == result.timestamp);
+    _storedResults[result.type]?[index].comment = result.comment;
+    _writeToFiles();
+  }
 
-  Future<List<Result>> loadAll(ResultType type) async {
+  Future<List<Result>> loadAll() async {
+    List<Result> all = [];
+
+    for(ResultType type in ResultType.values) {
+      all.addAll(await load(type));
+    }
+
+    return [];
+  }
+
+  Future<List<Result>> load(ResultType type) async {
     if (_storedResults[type] != null) {
       return _storedResults[type]!;
     }

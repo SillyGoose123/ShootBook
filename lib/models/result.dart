@@ -9,19 +9,19 @@ part "result.g.dart";
 @JsonSerializable()
 class Result {
   @JsonKey(required: true)
-  List<Series> series;
+  final List<Series> series;
 
   @JsonKey(required: true)
-  double value;
+  final double value;
 
   @JsonKey(required: true)
-  ResultType type;
+  final ResultType type;
 
   @JsonKey(required: false, defaultValue: "")
   String comment;
 
   @JsonKey(required: true)
-  DateTime timestamp;
+  final DateTime timestamp;
 
   Result(this.series, this.value, this.type, this.comment, this.timestamp);
 
@@ -64,5 +64,9 @@ class Result {
     }
 
     return value;
+  }
+
+  String toFileString() {
+    return "/${type}_$timestamp.json";
   }
 }
