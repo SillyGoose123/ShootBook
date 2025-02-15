@@ -1,0 +1,9 @@
+{
+  "newTimeComment": "Das wurde mit den neuen Schießzeiten geschossen",
+  "oldTimeComment": "Das wurde mit den alten Schießzeiten geschossen",
+  "password": "Passwort",
+  "disagLoginExplanation": "Email & Passwort werden nicht auf ihrem Gerät gespeichert. Nur ein temporärer zugangs Token.",
+  "loginDisag": "Bei Disag Anmeldung",
+  "noResults": "Keine Ergebnisse vorhanden. Scannen oder Importieren sie welche in den Einstellungen.",
+  "importDisagResults": "Disag Ergebnisse Importieren"
+}

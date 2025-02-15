@@ -1,4 +1,4 @@
-# shootbook
+# shoot book
 
 A documentation tool for your shooting results.
 

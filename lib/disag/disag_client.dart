@@ -7,16 +7,17 @@ import 'package:shootbook/models/model_saver.dart';
 import 'package:shootbook/models/result.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+String tokenKey = "disagKey";
+FlutterSecureStorage storage = FlutterSecureStorage();
+
 class ApiClient {
   static ApiClient? instance;
-  final storage = FlutterSecureStorage();
-  final String tokenKey = "disagKey";
   final String _token;
   final AppLocalizations _locale;
 
   ApiClient._create(this._token, this._locale);
 
-  Future<ApiClient> getInstance(AppLocalizations locale) async {
+ static Future<ApiClient> getInstance(AppLocalizations locale) async {
     if(instance == null) {
       //load token from store
       final token = await storage.read(key: tokenKey);
@@ -35,7 +36,7 @@ class ApiClient {
     return instance!;
   }
 
-  Future<ApiClient> login(String email, String password, AppLocalizations locale) async {
+  static Future<ApiClient> login(String email, String password, AppLocalizations locale) async {
     if(instance != null) throw Exception("ApiClient already instantiated. Logout before you login.");
 
     String token = await _getToken(email, password);
@@ -48,12 +49,12 @@ class ApiClient {
     return instance!;
   }
 
-  void logout() async {
+  static void logout() async {
     instance = null;
     await storage.delete(key: tokenKey);
   }
 
-   Future<bool> _checkToken(String token) async {
+   static Future<bool> _checkToken(String token) async {
     var res = await http.get(Uri.parse("https://shotsapp.disag.de/api/user/profile"), headers: {
       HttpHeaders.authorizationHeader: token,
     });
@@ -65,7 +66,7 @@ class ApiClient {
     return res.statusCode == 200;
   }
 
-  Future<String> _getToken(String email, String password) async {
+  static Future<String> _getToken(String email, String password) async {
     var req =
     http.MultipartRequest("POST", Uri.parse("https://shosapp.disag.de/api/results/preview"));
 
