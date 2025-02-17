@@ -8,7 +8,7 @@ import 'package:shootbook/ui/common/utils.dart';
 class DisagLogin extends StatefulWidget {
   const DisagLogin({super.key, required this.onLogin});
 
-  final Function(ApiClient client) onLogin;
+  final void Function(ApiClient client) onLogin;
 
   @override
   State<StatefulWidget> createState() => _DisagLoginState();

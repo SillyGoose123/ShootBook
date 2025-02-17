@@ -1,6 +1,7 @@
 import 'package:intl/intl.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:shootbook/disag/disag_utils.dart';
+import 'package:shootbook/models/model_saver.dart';
 import 'package:shootbook/models/result_type.dart';
 import 'package:shootbook/models/series.dart';
 import 'package:shootbook/models/shot.dart';
@@ -38,6 +39,8 @@ class Result {
 
     for(final (index, Map<String, dynamic> jsonShot) in (json["data"]["results"] as List<dynamic>).indexed) {
       Shot shot = Shot.fromDisag(jsonShot);
+      print(jsonShot);
+      print(shot);
       shots.add(shot);
       value += shot.value;
 
