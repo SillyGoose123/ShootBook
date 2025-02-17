@@ -5,12 +5,27 @@ import 'package:shootbook/ui/HomeScreen/Tabs/options.dart';
 import 'Tabs/Result/results.dart';
 import 'Tabs/scanner.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<StatefulWidget> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  late CupertinoTabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    // Create TabController for getting the index of current tab
+    _tabController = CupertinoTabController(initialIndex: 1);
+  }
 
   @override
   Widget build(BuildContext context) {
     return CupertinoTabScaffold(
+        controller: _tabController,
         tabBar: CupertinoTabBar(items: [
           BottomNavigationBarItem(icon: Icon(CupertinoIcons.qrcode_viewfinder)),
           BottomNavigationBarItem(icon: Icon(CupertinoIcons.scope)),
@@ -28,14 +43,13 @@ class HomeScreen extends StatelessWidget {
   Widget _buildTabs(int index) {
     switch (index) {
       case 0:
-        return Scanner();
-        
+        return Scanner(tabController: _tabController, myIndex: index);
+
       case 2:
         return Options();
 
       default:
-        return Results();
-
+        return Results(tabController: _tabController, myIndex: index);
     }
   }
 }

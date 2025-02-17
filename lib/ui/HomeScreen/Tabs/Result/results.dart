@@ -1,14 +1,15 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:shootbook/models/model_saver.dart';
 import 'package:shootbook/models/result.dart';
 import 'package:shootbook/ui/HomeScreen/Tabs/Result/result_card.dart';
 import "package:shootbook/localisation/app_localizations.dart";
 
-
 class Results extends StatefulWidget {
-  const Results({super.key});
+  final CupertinoTabController tabController;
+  final int myIndex;
+
+  const Results({super.key, required this.tabController, required this.myIndex});
 
   @override
   State<StatefulWidget> createState() => _ResultState();
@@ -23,6 +24,13 @@ class _ResultState extends State<Results> {
     super.initState();
 
     _loadResults();
+
+    //detect when tab is open again
+    widget.tabController.addListener(()  {
+      if(widget.tabController.index == widget.myIndex) {
+        _loadResults();
+      }
+    });
   }
 
   @override
@@ -38,21 +46,29 @@ class _ResultState extends State<Results> {
           mainAxisAlignment: MainAxisAlignment.center,
           spacing: 10,
           children: [
-            Icon(CupertinoIcons.nosign, size: 150.0,),
-            Text(locale.noResults)]);
+            Icon(
+              CupertinoIcons.nosign,
+              size: 150.0,
+            ),
+            Text(locale.noResults)
+          ]);
     }
 
-    return RefreshIndicator(onRefresh: _loadResults,
-    child: ListView.builder(
-        scrollDirection: Axis.vertical,
-        itemCount: results!.length,
-        itemBuilder: (BuildContext context, int index) =>
-            ResultCard(result: results![index])));
+    return RefreshIndicator(
+        onRefresh: _loadResults,
+        child: ListView.builder(
+            scrollDirection: Axis.vertical,
+            itemCount: results!.length,
+            itemBuilder: (BuildContext context, int index) =>
+                ResultCard(result: results![index])));
   }
 
   Future<void> _loadResults() async {
     ModelSaver saver = await ModelSaver.getInstance();
     var temp = await saver.loadAll();
+
+    //new before old
+    temp.sort((Result a, Result b) => b.timestamp.compareTo(a.timestamp));
 
     setState(() {
       results = temp;
