@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'result_type.g.dart';
@@ -57,9 +56,6 @@ enum ResultType {
   kkpd60,
 }
 
-extension ResultTypeExtension on ResultType {
-  static ResultType fromString(String type) {
-    return $enumDecode(_$ResultTypeEnumMap, jsonDecode(type));
-  }
+extension ResultTypeEx on ResultType {
+  String toText() => _$ResultTypeEnumMap[this]!;
 }
-

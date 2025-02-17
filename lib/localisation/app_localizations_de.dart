@@ -1,5 +1,3 @@
-// ignore: unused_import
-import 'package:intl/intl.dart' as intl;
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -21,11 +19,31 @@ class AppLocalizationsDe extends AppLocalizations {
   String get disagLoginExplanation => 'Email & Passwort werden nicht auf ihrem Gerät gespeichert. Nur ein temporärer zugangs Token.';
 
   @override
-  String get loginDisag => 'Bei Disag Anmeldung';
+  String get loginDisag => 'Bei Disag Anmelden';
 
   @override
   String get noResults => 'Keine Ergebnisse vorhanden. Scannen oder Importieren sie welche in den Einstellungen.';
 
   @override
   String get importDisagResults => 'Disag Ergebnisse Importieren';
+
+  @override
+  String get importingDisagResults => 'Disag Ergebnisse werden importiert...';
+
+  @override
+  String get invalidEmail => 'Ungültige Emailaddresse';
+
+  @override
+  String get logout => 'Abmelden von Disag';
+
+  @override
+  String get loginFailed => 'Falsche Anmeldedaten';
+
+  @override
+  String get importFailed => 'Ergebnis Import fehlgeschlagen';
+
+  @override
+  String importOfFailed(String name) {
+    return 'Ergebnis $name konnte nicht importiert werden';
+  }
 }

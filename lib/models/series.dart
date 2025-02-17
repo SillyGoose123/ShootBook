@@ -37,4 +37,9 @@ class Series {
 
     return value;
   }
+
+  @override
+  String toString() {
+    return _$SeriesToJson(this).toString();
+  }
 }

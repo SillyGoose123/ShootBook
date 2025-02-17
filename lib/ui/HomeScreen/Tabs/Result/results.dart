@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:shootbook/models/model_saver.dart';
 import 'package:shootbook/models/result.dart';
 import 'package:shootbook/ui/HomeScreen/Tabs/Result/result_card.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import "package:shootbook/localisation/app_localizations.dart";
+
 
 class Results extends StatefulWidget {
   const Results({super.key});
@@ -17,25 +19,43 @@ class _ResultState extends State<Results> {
   List<Result>? results;
 
   @override
+  void initState() {
+    super.initState();
+
+    _loadResults();
+  }
+
+  @override
   Widget build(BuildContext context) {
     AppLocalizations locale = AppLocalizations.of(context)!;
 
     if (results == null) {
-      return CircularProgressIndicator();
+      return Center(child: CircularProgressIndicator());
     }
 
     if (results!.isEmpty) {
       return Column(
-          children: [Icon(CupertinoIcons.nosign), Text(locale.noResults)]);
+          mainAxisAlignment: MainAxisAlignment.center,
+          spacing: 10,
+          children: [
+            Icon(CupertinoIcons.nosign, size: 150.0,),
+            Text(locale.noResults)]);
     }
 
-    return ListView.builder(
+    return RefreshIndicator(onRefresh: _loadResults,
+    child: ListView.builder(
+        scrollDirection: Axis.vertical,
+        itemCount: results!.length,
         itemBuilder: (BuildContext context, int index) =>
-            ResultCard(result: results![index]));
+            ResultCard(result: results![index])));
   }
 
   Future<void> _loadResults() async {
     ModelSaver saver = await ModelSaver.getInstance();
-    results = await saver.loadAll();
+    var temp = await saver.loadAll();
+
+    setState(() {
+      results = temp;
+    });
   }
 }

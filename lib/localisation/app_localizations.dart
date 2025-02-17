@@ -18,7 +18,7 @@ import 'app_localizations_en.dart';
 /// `supportedLocales` list. For example:
 ///
 /// ```dart
-/// import 'l10n/app_localizations.dart';
+/// import 'localisation/app_localizations.dart';
 ///
 /// return MaterialApp(
 ///   localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -136,6 +136,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Import Disag Results'**
   String get importDisagResults;
+
+  /// No description provided for @importingDisagResults.
+  ///
+  /// In en, this message translates to:
+  /// **'Importing Disag Results...'**
+  String get importingDisagResults;
+
+  /// No description provided for @invalidEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid Email'**
+  String get invalidEmail;
+
+  /// No description provided for @logout.
+  ///
+  /// In en, this message translates to:
+  /// **'Logout from Disag'**
+  String get logout;
+
+  /// No description provided for @loginFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Login failed'**
+  String get loginFailed;
+
+  /// No description provided for @importFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Result import failed'**
+  String get importFailed;
+
+  /// No description provided for @importOfFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Result {name} couldn\'t be imported'**
+  String importOfFailed(String name);
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -1,5 +1,3 @@
-// ignore: unused_import
-import 'package:intl/intl.dart' as intl;
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -28,4 +26,24 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get importDisagResults => 'Import Disag Results';
+
+  @override
+  String get importingDisagResults => 'Importing Disag Results...';
+
+  @override
+  String get invalidEmail => 'Invalid Email';
+
+  @override
+  String get logout => 'Logout from Disag';
+
+  @override
+  String get loginFailed => 'Login failed';
+
+  @override
+  String get importFailed => 'Result import failed';
+
+  @override
+  String importOfFailed(String name) {
+    return 'Result $name couldn\'t be imported';
+  }
 }

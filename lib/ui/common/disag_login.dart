@@ -1,9 +1,9 @@
-import 'dart:async';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shootbook/disag/disag_client.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:shootbook/disag/disag_utils.dart';
+import "package:shootbook/localisation/app_localizations.dart";
+import 'package:shootbook/ui/common/utils.dart';
 
 class DisagLogin extends StatefulWidget {
   const DisagLogin({super.key, required this.onLogin});
@@ -14,39 +14,92 @@ class DisagLogin extends StatefulWidget {
   State<StatefulWidget> createState() => _DisagLoginState();
 }
 
-//TODO: check if disag app detects if email or psw wrong
 //TODO: Handle Login Error with toast or snack bar or making fields red
-class _DisagLoginState extends State<StatefulWidget> {
+class _DisagLoginState extends State<DisagLogin> {
   late AppLocalizations locale;
   TextEditingController emailController = TextEditingController(text: "");
   TextEditingController pswController = TextEditingController(text: "");
+  late final GlobalKey<FormState> formKey;
+  bool loading = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    formKey = GlobalKey<FormState>();
+  }
 
   @override
   Widget build(BuildContext context) {
     locale = AppLocalizations.of(context)!;
 
-    return Row(children: [
-      Text(locale.disagLoginExplanation),
-      TextField(
-          controller: emailController,
-          decoration: InputDecoration(
-              icon: Icon(Icons.alternate_email), label: const Text("Email"))),
-      TextField(
-          controller: pswController,
-          decoration: InputDecoration(
-              icon: Icon(CupertinoIcons.padlock),
-              label: Text(locale.password))),
-      TextButton(
-          onPressed: onPress,
-          child: Text(locale.loginDisag))
-    ]);
+    if (loading) return Center(child: CircularProgressIndicator());
+
+    return Form(
+        key: formKey,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            spacing: 20,
+            children: [
+              Flexible(
+                  child: Text(locale.disagLoginExplanation,
+                      textAlign: TextAlign.center)),
+              TextFormField(
+                  controller: emailController,
+                  validator: validateEmail,
+                  keyboardType: TextInputType.emailAddress,
+                  autocorrect: false,
+                  autofillHints: [AutofillHints.username],
+                  enableSuggestions: true,
+                  onChanged: (value) => setState(() {
+                        /* Update Elevated button */
+                      }),
+                  decoration: InputDecoration(
+                      icon: Icon(Icons.alternate_email),
+                      label: const Text("Email"))),
+              TextField(
+                  controller: pswController,
+                  obscureText: true,
+                  enableSuggestions: false,
+                  autocorrect: false,
+                  autofillHints: [AutofillHints.password],
+                  onChanged: (value) => setState(() {
+                        /* Update Elevated button */
+                      }),
+                  decoration: InputDecoration(
+                      icon: Icon(CupertinoIcons.padlock),
+                      label: Text(locale.password))),
+              ElevatedButton(
+                  onPressed: isInputValid() ? onPress : null,
+                  child: Text(locale.loginDisag))
+            ]));
+  }
+
+  String? validateEmail(String? value) {
+    return (value == null || value.isEmpty || checkEmail(value))
+        ? null
+        : locale.invalidEmail;
+  }
+
+  bool isInputValid() {
+    return emailController.text.isNotEmpty &&
+        pswController.text.isNotEmpty &&
+        formKey.currentState != null &&
+        formKey.currentState!.validate();
   }
 
   void onPress() {
-    try {
-      ApiClient.login(emailController.text, pswController.text, locale).then((value) => widget.onLogin);
-    } catch(e) {
-      pswController.clear();
-    }
+    ApiClient.login(emailController.text, pswController.text, locale)
+        .then((value) => widget.onLogin(value))
+        .catchError((e) {
+          setState(() {
+            loading = false;
+          });
+
+          if(context.mounted) {
+            showSnackBarError(locale.loginFailed, context);
+          }
+    });
   }
 }

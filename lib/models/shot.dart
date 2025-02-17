@@ -29,4 +29,9 @@ class Shot {
   double calcDivider() {
     return sqrt(pow(x,2)  + pow(y,2)) * 20 / 20;
   }
+
+  @override
+  String toString() {
+    return _$ShotToJson(this).toString();
+  }
 }
