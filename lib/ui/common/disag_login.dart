@@ -14,7 +14,6 @@ class DisagLogin extends StatefulWidget {
   State<StatefulWidget> createState() => _DisagLoginState();
 }
 
-//TODO: Handle Login Error with toast or snack bar or making fields red
 class _DisagLoginState extends State<DisagLogin> {
   late AppLocalizations locale;
   TextEditingController emailController = TextEditingController(text: "");
@@ -24,7 +23,6 @@ class _DisagLoginState extends State<DisagLogin> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     formKey = GlobalKey<FormState>();
   }

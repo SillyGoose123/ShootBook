@@ -1,6 +1,4 @@
-import 'dart:math';
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import "package:shootbook/localisation/app_localizations.dart";
 import 'package:shootbook/disag/disag_client.dart';
@@ -10,7 +8,6 @@ import 'package:shootbook/ui/common/utils.dart';
 
 import '../../../models/result.dart';
 
-//disag import page mit der man auswählen kann was man will
 class Options extends StatefulWidget {
   const Options({super.key});
 
@@ -71,7 +68,6 @@ class _OptionsState extends State<Options> {
         login = true;
       });
     } catch (e) {
-      print(e);
       if (context.mounted) {
         showSnackBarError(locale!.importFailed, context);
       }
