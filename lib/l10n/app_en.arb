@@ -1,9 +1,0 @@
-{
-  "newTimeComment": "This was shot with new Time",
-  "oldTimeComment": "This was shot in old time",
-  "password": "Password",
-  "disagLoginExplanation": "Email & Password aren't stored on your device. Only a temporary access token.",
-  "loginDisag": "Login to Disag",
-  "noResults": "No results found. Scan or import them in the settings.",
-  "importDisagResults": "Import Disag Results"
-}

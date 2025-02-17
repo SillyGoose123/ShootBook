@@ -1,9 +1,11 @@
+import 'package:intl/intl.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:shootbook/disag/disag_utils.dart';
 import 'package:shootbook/models/result_type.dart';
 import 'package:shootbook/models/series.dart';
 import 'package:shootbook/models/shot.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import "package:shootbook/localisation/app_localizations.dart";
+
 
 part "result.g.dart";
 @JsonSerializable()
@@ -34,7 +36,7 @@ class Result {
     List<Shot> shots = [];
     double value = 0.0;
 
-    for(final (index, Map<String, dynamic> jsonShot) in json["data"].indexed) {
+    for(final (index, Map<String, dynamic> jsonShot) in (json["data"]["results"] as List<dynamic>).indexed) {
       Shot shot = Shot.fromDisag(jsonShot);
       shots.add(shot);
       value += shot.value;
@@ -49,6 +51,9 @@ class Result {
     final comment = isNewTime(disagType) ? locale.newTimeComment : locale.oldTimeComment;
 
     final DateTime time = DateTime.parse(json["created_at"]);
+
+    // round value with precision 2
+    value = double.parse(value.toStringAsFixed(2));
 
     return Result(series, value, type, comment, time);
   }
@@ -67,6 +72,15 @@ class Result {
   }
 
   String toFileString() {
-    return "/${type}_$timestamp.json";
+    return "/${type.toText()}_$timestamp.json";
+  }
+
+  String formatTime() {
+    return "${DateFormat.jm().format(timestamp)}-${DateFormat.yMd().format(timestamp)}";
+  }
+
+  @override
+  String toString() {
+    return "${type.toText()}_${formatTime()}";
   }
 }

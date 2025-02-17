@@ -1,0 +1,23 @@
+{
+  "newTimeComment": "This was shot with new Time",
+  "oldTimeComment": "This was shot in old time",
+  "password": "Password",
+  "disagLoginExplanation": "Email & Password aren't stored on your device. Only a temporary access token.",
+  "loginDisag": "Login to Disag",
+  "noResults": "No results found. Scan or import them in the settings.",
+  "importDisagResults": "Import Disag Results",
+  "importingDisagResults": "Importing Disag Results...",
+  "invalidEmail": "Invalid Email",
+  "logout": "Logout from Disag",
+  "loginFailed": "Login failed",
+
+  "importFailed": "Result import failed",
+  "importOfFailed": "Result {name} couldn't be imported",
+  "@importOfFailed": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  }
+}

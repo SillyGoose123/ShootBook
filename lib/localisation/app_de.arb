@@ -1,0 +1,23 @@
+{
+  "newTimeComment": "Das wurde mit den neuen Schießzeiten geschossen",
+  "oldTimeComment": "Das wurde mit den alten Schießzeiten geschossen",
+  "password": "Passwort",
+  "disagLoginExplanation": "Email & Passwort werden nicht auf ihrem Gerät gespeichert. Nur ein temporärer zugangs Token.",
+  "loginDisag": "Bei Disag Anmelden",
+  "noResults": "Keine Ergebnisse vorhanden. Scannen oder Importieren sie welche in den Einstellungen.",
+  "importDisagResults": "Disag Ergebnisse Importieren",
+  "importingDisagResults": "Disag Ergebnisse werden importiert...",
+  "invalidEmail": "Ungültige Emailaddresse",
+  "logout": "Abmelden von Disag",
+  "loginFailed": "Falsche Anmeldedaten",
+
+  "importFailed": "Ergebnis Import fehlgeschlagen",
+  "importOfFailed": "Ergebnis {name} konnte nicht importiert werden",
+  "@importOfFailed": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  }
+}

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shootbook/disag/disag_client.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import "package:shootbook/localisation/app_localizations.dart";
 import 'package:shootbook/ui/common/disag_login.dart';
 
 class Scanner extends StatefulWidget {
@@ -16,10 +16,17 @@ class _ScannerState extends State<Scanner> {
 
   Future<void> _tryLogin() async{
     try {
-      _client = await ApiClient.getInstance(AppLocalizations.of(context)!);
+      var tempClient = await ApiClient.getInstance(AppLocalizations.of(context)!);
+      setState(() {
+        _client = tempClient;
+      });
     } catch(e) {
-      _login = true;
+      setState(() {
+        _client = null;
+        _login = true;
+      });
     }
+
   }
 
   @override
@@ -27,11 +34,13 @@ class _ScannerState extends State<Scanner> {
     _tryLogin();
     
     if(_client == null && _login) {
-      return DisagLogin(onLogin: (ApiClient client) => _client = client);
+      return DisagLogin(onLogin: (ApiClient client) => setState(() {
+        _client = client;
+      }));
     }
-    
+
     if(_client == null) {
-      return CircularProgressIndicator();
+      return Center(child: CircularProgressIndicator());
     }
     
     return Text("Scanner");

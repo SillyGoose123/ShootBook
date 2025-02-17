@@ -1,15 +1,16 @@
+import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:flutter/material.dart';
 
 void showSnackBarError(String msg, BuildContext context) {
-  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-    content: Center(
-        child: Text(
-          msg,
-          style: const TextStyle(color: Colors.redAccent),
-        )),
-    duration: Durations.extralong2,
-    backgroundColor: const Color(0xff111318),
-  ));
+  AnimatedSnackBar.material(
+    msg,
+    type: AnimatedSnackBarType.error,
+    mobileSnackBarPosition: MobileSnackBarPosition.bottom,
+      mobilePositionSettings: const MobilePositionSettings(
+      bottomOnAppearance: 80,
+      ),
+    duration: Duration(seconds: 5)
+  ).show(context);
 }
 
 showPage(Widget page, BuildContext context) {

@@ -5,10 +5,14 @@ import 'package:http/http.dart' as http;
 import 'package:shootbook/disag/disag_utils.dart';
 import 'package:shootbook/models/model_saver.dart';
 import 'package:shootbook/models/result.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import "package:shootbook/localisation/app_localizations.dart";
 
 String tokenKey = "disagKey";
 FlutterSecureStorage storage = FlutterSecureStorage();
+
+class TokenException implements Exception {
+  TokenException(String s);
+}
 
 class ApiClient {
   static ApiClient? instance;
@@ -17,17 +21,18 @@ class ApiClient {
 
   ApiClient._create(this._token, this._locale);
 
- static Future<ApiClient> getInstance(AppLocalizations locale) async {
-    if(instance == null) {
+  static Future<ApiClient> getInstance(AppLocalizations locale) async {
+    if (instance == null) {
       //load token from store
       final token = await storage.read(key: tokenKey);
 
-      if(token == null) {
-        throw Exception("No token found.");
+      if (token == null) {
+        throw TokenException("No token found.");
       }
 
-      if(!await _checkToken(token)) {
-        throw Exception("Stored token is invalid user need to login first");
+      if (!await _checkToken(token)) {
+        throw TokenException(
+            "Stored token is invalid user need to login first");
       }
 
       instance = ApiClient._create(token, locale);
@@ -36,8 +41,10 @@ class ApiClient {
     return instance!;
   }
 
-  static Future<ApiClient> login(String email, String password, AppLocalizations locale) async {
-    if(instance != null) throw Exception("ApiClient already instantiated. Logout before you login.");
+  static Future<ApiClient> login(String email, String password,
+      AppLocalizations locale) async {
+    if (instance != null) throw Exception(
+        "ApiClient already instantiated. Logout before you login.");
 
     String token = await _getToken(email, password);
 
@@ -54,12 +61,14 @@ class ApiClient {
     await storage.delete(key: tokenKey);
   }
 
-   static Future<bool> _checkToken(String token) async {
-    var res = await http.get(Uri.parse("https://shotsapp.disag.de/api/user/profile"), headers: {
-      HttpHeaders.authorizationHeader: token,
+  static Future<bool> _checkToken(String token) async {
+    var res = await http.get(
+        Uri.parse("https://shotsapp.disag.de/api/user/profile"), headers: {
+      HttpHeaders.authorizationHeader:
+      "Bearer $token",
     });
 
-    if(res.statusCode != 200) {
+    if (res.statusCode != 200) {
       logout();
     }
 
@@ -68,7 +77,8 @@ class ApiClient {
 
   static Future<String> _getToken(String email, String password) async {
     var req =
-    http.MultipartRequest("POST", Uri.parse("https://shosapp.disag.de/api/results/preview"));
+    http.MultipartRequest(
+        "POST", Uri.parse("https://shotsapp.disag.de/api/token"));
 
     req.fields["email"] = email;
     req.fields["password"] = password;
@@ -76,22 +86,23 @@ class ApiClient {
 
     var res = await req.send();
 
-    if(res.statusCode != 200) {
+    if (res.statusCode != 200) {
       throw Exception("Failed fetching token. Maybe the credentials are wrong");
     }
 
-    return res.stream.toString();
+    return res.stream.bytesToString();
   }
 
-  Future<http.StreamedResponse> makeRequest(http.BaseRequest req, String errorMsg) async {
+  Future<http.StreamedResponse> makeRequest(http.BaseRequest req,
+      String errorMsg) async {
     req.headers.addAll({
-      HttpHeaders.authorizationHeader: _token,
+      HttpHeaders.authorizationHeader: "Bearer $_token",
     });
 
     var res = await req.send();
 
-    if(res.statusCode != 200) {
-      if(await _checkToken(_token)) {
+    if (res.statusCode != 200) {
+      if (await _checkToken(_token)) {
         throw Exception("Token expired.");
       }
 
@@ -101,30 +112,38 @@ class ApiClient {
     return res;
   }
 
-  Future<http.StreamedResponse> _qrRequest(String qrCodeLink, bool isPreview) async {
+  Future<http.StreamedResponse> _qrRequest(String qrCodeLink,
+      bool isPreview) async {
     var req =
-    http.MultipartRequest("POST", Uri.parse("https://shosapp.disag.de/api/results${isPreview ? "/preview" : ""}"));
+    http.MultipartRequest("POST", Uri.parse(
+        "https://shosapp.disag.de/api/results${isPreview ? "/preview" : ""}"));
     req.fields["data"] = qrCodeLink;
 
     return await makeRequest(req, "Failed fetching qr code data");
   }
 
   Future<Result> getQrCodeDataPreview(String qrCodeLink) async {
-    var res = _qrRequest(qrCodeLink, true);
-    return Result.fromDisag(jsonDecode(res.toString()), _locale);
+    var res = await _qrRequest(qrCodeLink, true);
+    var json = jsonDecode(await res.stream.bytesToString());
+
+    return Result.fromDisag(json, _locale);
   }
 
-  Future<List<Map<String, dynamic>>> _makeResultReq() async {
-    var req = http.Request("GET", Uri.parse("https://shotsapp.disag.de/api/results"));
-    var res = makeRequest(req, "Failed fetching your results.");
-    return jsonDecode(res.toString()).data;
+  Future<List<dynamic>> _makeResultReq() async {
+    var req = http.Request(
+        "GET", Uri.parse("https://shotsapp.disag.de/api/results"));
+    var res = await makeRequest(req, "Failed fetching your results.");
+    var body = await res.stream.bytesToString();
+
+    return jsonDecode(body)["data"];
   }
 
   Future<void> acceptResult(String qrCodeLink) async {
-    Map<String, dynamic> res = jsonDecode((await _qrRequest(qrCodeLink, false)).toString());
-    List<Map<String, dynamic>> results = await _makeResultReq();
+    Map<String, dynamic> res = jsonDecode(
+        (await _qrRequest(qrCodeLink, false)).toString());
+    List<dynamic> results = await _makeResultReq();
 
-    if(results.contains({"id": res["id"]})) {
+    if (results.contains({"id": res["id"]})) {
       throw Exception("Result already added.");
     }
 
@@ -134,11 +153,12 @@ class ApiClient {
 
   Future<List<Result>> getAllResults() async {
     var res = await _makeResultReq();
-    return gatherAllResults(res.toString(), _locale);
+    return gatherAllResults(res, _locale);
   }
 
   Future<void> deleteResult(String id) async {
-    var req = http.Request("DELETE", Uri.parse("https://shotsapp.disag.de/api/results/$id}"));
+    var req = http.Request(
+        "DELETE", Uri.parse("https://shotsapp.disag.de/api/results/$id}"));
     await makeRequest(req, "Couldn't delete result (id: $id).");
   }
 

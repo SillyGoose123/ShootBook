@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:shootbook/models/result_type.dart';
 
 import '../../../../models/result.dart';
 
@@ -8,13 +9,18 @@ class ResultCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         const Text("PREVIEW"),
-        Row(children: [
-          Text(result.type.toString()),
-          Text(result.timestamp.toString()),
-          Text(result.value.toString()),
+        Column(children: [
+          Text(result.type.toText()),
+          Text(result.formatTime()),
+          Row(spacing: 10, children: [
+            Text(result.calcNonTenthValue().toString()),
+            Text(result.value.toString())
+          ],)
+         ,
         ],)
       ],
     );
