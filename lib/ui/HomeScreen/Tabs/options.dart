@@ -73,7 +73,7 @@ class _OptionsState extends State<Options> {
         showSnackBarError(locale!.importFailed, context);
       }
     }
-    if (dialogContext!.mounted) {
+    if (dialogContext != null && dialogContext!.mounted) {
       Navigator.pop(dialogContext!);
       setState(() {
         dialogContext = null;
