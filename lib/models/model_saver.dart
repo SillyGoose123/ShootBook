@@ -12,19 +12,32 @@ class ModelSaver {
   static ModelSaver? _instance;
   final Directory _directory;
   final Map<ResultType, List<Result>> _storedResults = {};
+  bool _loaded = false;
 
   ModelSaver._create(this._directory);
 
   static Future<ModelSaver> getInstance() async {
-    _instance ??= ModelSaver._create(await getApplicationDocumentsDirectory());
+    final appDir = await getApplicationDocumentsDirectory();
+    Directory dir = Directory("${appDir.path}/results");
+
+    if(!await dir.exists()) {
+      dir = await dir.create();
+    }
+
+    _instance ??= ModelSaver._create(dir);
     return _instance!;
   }
 
   Future<void> _writeToFiles() async {
+    var encoder = JsonEncoder.withIndent("     ");
+
     for (ResultType type in _storedResults.keys) {
       for (Result result in _storedResults[type] ?? []) {
-        await File(_directory.path + result.toFileString())
-            .writeAsString(jsonEncode(result.toJson()));
+        File file = File(_directory.path + result.toFileString());
+
+        String json = encoder.convert(result.toJson());
+
+        await file.writeAsString(json);
       }
     }
   }
@@ -63,35 +76,32 @@ class ModelSaver {
     await _writeToFiles();
   }
 
-  Future<List<Result>> loadAll() async {
-    List<Result> all = [];
+  Future<List<Result>> load() async {
+    //load if not loaded before
+    await _load();
 
-    for (ResultType type in ResultType.values) {
-      all.addAll(await load(type));
-    }
-
-    return all;
+    //make a list
+    return _storedResults.values.expand((list) => list).toList();
   }
 
-  Future<List<Result>> load(ResultType type) async {
-    if (_storedResults[type] != null) {
-      return _storedResults[type]!;
+  Future<void> _load() async {
+    if (_loaded) return;
+    _loaded = true;
+
+    await for (var entity in _directory.list()) {
+      if (entity is! File) continue;
+      try {
+        final contents = await File(entity.path).readAsString();
+        final result = Result.fromJson(jsonDecode(contents));
+
+        if (_storedResults[result.type] == null) {
+          _storedResults[result.type] = [];
+        }
+        _storedResults[result.type]!.add(result);
+      } catch (e) {
+        continue;
+      }
     }
-
-    _storedResults[type] = [];
-
-    List<FileSystemEntity> typeFiles = await _directory
-        .list()
-        .where((FileSystemEntity entity) =>
-            entity.path.split("/").last.split("_")[0] == type.toString())
-        .toList();
-
-    for (FileSystemEntity file in typeFiles) {
-      final contents = await File(file.path).readAsString();
-      _storedResults[type]!.add(Result.fromJson(jsonDecode(contents)));
-    }
-
-    return _storedResults[type] ?? [];
   }
 }
 
