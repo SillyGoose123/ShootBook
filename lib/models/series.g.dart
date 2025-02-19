@@ -21,7 +21,7 @@ Series _$SeriesFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$SeriesToJson(Series instance) => <String, dynamic>{
-      'isProbe': instance.isProbe,
+      'isPractice': instance.isPractice,
       'shots': instance.shots,
       'value': instance.value,
     };
