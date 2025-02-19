@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:intl/intl.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:shootbook/disag/disag_utils.dart';
@@ -36,18 +38,22 @@ class Result {
     List<Shot> shots = [];
     double value = 0.0;
 
-    for(final (index, Map<String, dynamic> jsonShot) in (json["data"]["results"] as List<dynamic>).indexed) {
+    Iterable<(int, dynamic)> jsonShots = (json["data"]["results"] as List<dynamic>).indexed;
+
+    for(final (index, Map<String, dynamic> jsonShot) in jsonShots) {
       Shot shot = Shot.fromDisag(jsonShot);
       shots.add(shot);
       value += shot.value;
 
-      if(index % 10 == 0) {
-        shots = [];
+      if((index != 0 && index % 10 == 0) || jsonShots.length - 1 == index) {
         series.add(Series.fromShots(shots, false));
+        shots = [];
       }
     }
+
     final String disagType = json["discipline_id"] as String;
     final ResultType type = typeFromDisag(disagType);
+
     final comment = isNewTime(disagType) ? locale.newTimeComment : locale.oldTimeComment;
 
     final DateTime time = DateTime.parse(json["created_at"]);
@@ -67,6 +73,7 @@ class Result {
     for(final curSeries in series) {
       value += curSeries.calcNonTenthValue();
     }
+
 
     return value;
   }
