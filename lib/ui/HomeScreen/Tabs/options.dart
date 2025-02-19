@@ -61,15 +61,15 @@ class _OptionsState extends State<Options> {
       List<Result> res = await client.getAllResults();
 
       ModelSaver saver = await ModelSaver.getInstance();
-      if(dialogContext != null && dialogContext!.mounted) {
-        await saver.saveAll(res, dialogContext!);
+      if (mounted) {
+        await saver.saveAll(res, context);
       }
     } on TokenException catch (e) {
       setState(() {
         login = true;
       });
     } catch (e) {
-      if (context.mounted) {
+      if (mounted) {
         showSnackBarError(locale!.importFailed, context);
       }
     }

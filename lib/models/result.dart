@@ -83,7 +83,7 @@ class Result {
   }
 
   String formatTime() {
-    return "${DateFormat.jm().format(timestamp)}-${DateFormat.yMd().format(timestamp)}";
+    return "${DateFormat.jm().format(timestamp)}-${DateFormat.yMd().format(timestamp).replaceAll(" ", "_")}";
   }
 
   @override

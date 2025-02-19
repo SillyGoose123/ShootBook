@@ -65,10 +65,7 @@ class _ResultState extends State<Results> {
 
   Future<void> _loadResults() async {
     ModelSaver saver = await ModelSaver.getInstance();
-    var temp = await saver.loadAll();
-
-    //new before old
-    temp.sort((Result a, Result b) => b.timestamp.compareTo(a.timestamp));
+    var temp = await saver.load();
 
     setState(() {
       results = temp;

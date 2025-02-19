@@ -5,7 +5,7 @@ part "series.g.dart";
 @JsonSerializable()
 class Series {
   @JsonKey(required: false, defaultValue: false)
-  bool isProbe;
+  bool isPractice;
 
   @JsonKey(required: true)
   List<Shot> shots;
@@ -13,7 +13,7 @@ class Series {
   @JsonKey(required: true)
   double value;
 
-  Series(this.shots, this.value, this.isProbe);
+  Series(this.shots, this.value, this.isPractice);
 
   factory Series.fromShots(List<Shot> shots, bool isProbe) {
     double value = 0.0;
