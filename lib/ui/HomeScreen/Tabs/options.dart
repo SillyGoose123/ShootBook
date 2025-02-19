@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import "package:shootbook/localisation/app_localizations.dart";
 import 'package:shootbook/disag/disag_client.dart';
@@ -72,7 +73,7 @@ class _OptionsState extends State<Options> {
         showSnackBarError(locale!.importFailed, context);
       }
     }
-    if (dialogContext!.mounted) {
+    if (dialogContext != null && dialogContext!.mounted) {
       Navigator.pop(dialogContext!);
       setState(() {
         dialogContext = null;
