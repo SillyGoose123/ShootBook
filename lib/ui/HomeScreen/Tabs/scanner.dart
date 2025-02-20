@@ -1,3 +1,4 @@
+import 'package:ai_barcode_scanner/ai_barcode_scanner.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shootbook/disag/disag_client.dart';
@@ -17,6 +18,7 @@ class Scanner extends StatefulWidget {
 class _ScannerState extends State<Scanner> {
   bool _login = false;
   ApiClient? _client;
+  final MobileScannerController _scanController = MobileScannerController(autoStart: true, useNewCameraSelector: true);
 
   @override
   void didChangeDependencies() {
@@ -28,11 +30,13 @@ class _ScannerState extends State<Scanner> {
   void initState() {
     super.initState();
 
-
     //detect when tab is open again
     widget.tabController.addListener(()  {
       if(widget.tabController.index == widget.myIndex) {
         _tryLogin();
+        _scanController.start();
+      } else {
+        _scanController.pause();
       }
     });
   }
@@ -45,7 +49,7 @@ class _ScannerState extends State<Scanner> {
     try {
       var tempClient = await ApiClient.getInstance(AppLocalizations.of(context)!);
       setState(() {
-        _client = tempClient;
+        _client =  tempClient;
       });
     } catch(e) {
       setState(() {
@@ -53,7 +57,6 @@ class _ScannerState extends State<Scanner> {
         _login = true;
       });
     }
-
   }
 
   @override
@@ -67,8 +70,16 @@ class _ScannerState extends State<Scanner> {
     if(_client == null) {
       return Center(child: CircularProgressIndicator());
     }
-    
-    return Text("Scanner");
+
+    return AiBarcodeScanner(
+      hideSheetDragHandler: true,
+      hideSheetTitle: true,
+      onDetect: (BarcodeCapture capture) {
+        debugPrint(capture.toString());
+      },
+      hideGalleryButton: true,
+      controller: _scanController,
+    );
   }
 
 }
