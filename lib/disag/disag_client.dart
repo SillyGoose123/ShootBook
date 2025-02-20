@@ -43,8 +43,10 @@ class ApiClient {
 
   static Future<ApiClient> login(String email, String password,
       AppLocalizations locale) async {
-    if (instance != null) throw Exception(
+    if (instance != null) {
+      throw Exception(
         "ApiClient already instantiated. Logout before you login.");
+    }
 
     String token = await _getToken(email, password);
 
