@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:json_annotation/json_annotation.dart';
 
 part 'result_type.g.dart';
@@ -58,4 +56,13 @@ enum ResultType {
 
 extension ResultTypeEx on ResultType {
   String toText() => _$ResultTypeEnumMap[this]!;
+
+  int getShootCount() {
+    RegExp regExp = RegExp(r'\d+');
+    Match? match = regExp.firstMatch(toString());
+
+    if(match == null) throw Exception("Incorrect type.");
+
+    return int.parse(match.group(0)!);
+  }
 }
