@@ -87,7 +87,7 @@ class Result {
   }
 
   String formatTime() {
-    return "${DateFormat.Hm().format(timestamp)}, ${DateFormat.yMd().format(timestamp)}";
+    return DateFormat("d.M.y, HH:mm",).format(timestamp.toLocal());
   }
 
   @override
