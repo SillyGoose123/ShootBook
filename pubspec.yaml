@@ -42,6 +42,7 @@ dependencies:
   intl: any
   path_provider: ^2.1.5
   animated_snack_bar: ^0.4.0
+  ai_barcode_scanner: ^6.0.1
 
 dev_dependencies:
   flutter_test:

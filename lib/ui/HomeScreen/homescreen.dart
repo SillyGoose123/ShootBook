@@ -34,7 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
         tabBuilder: (BuildContext context, int index) {
           return CupertinoTabView(builder: (BuildContext context) {
             return Padding(
-                padding: const EdgeInsets.fromLTRB(16, 50, 16, 16),
+                padding: index == 0 ? EdgeInsets.zero : const EdgeInsets.fromLTRB(16, 50, 16, 16),
                 child: _buildTabs(index));
           });
         });
