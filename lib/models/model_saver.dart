@@ -11,7 +11,7 @@ import 'package:shootbook/ui/common/utils.dart';
 class ModelSaver {
   static ModelSaver? _instance;
   final Directory _directory;
-  final Map<ResultType, List<Result>> _storedResults = {};
+  Map<ResultType, List<Result>> _storedResults = {};
   bool _loaded = false;
 
   ModelSaver._create(this._directory);
@@ -34,6 +34,7 @@ class ModelSaver {
     for (ResultType type in _storedResults.keys) {
       for (Result result in _storedResults[type] ?? []) {
         File file = File(_directory.path + result.toFileString());
+        file.create();
 
         String json = encoder.convert(result.toJson());
 
@@ -76,18 +77,19 @@ class ModelSaver {
     await _writeToFiles();
   }
 
-  Future<List<Result>> load() async {
-    //load if not loaded before
-    await _load();
+  Future<List<Result>> load(bool? loadAgain) async {
+    if((loadAgain != null && loadAgain) || !_loaded) {
+      _loaded = true;
+      _storedResults = {};
+      //load if not loaded before
+      await _load();
+    }
 
     //make a list
     return _storedResults.values.expand((list) => list).toList();
   }
 
   Future<void> _load() async {
-    if (_loaded) return;
-    _loaded = true;
-
     await for (var entity in _directory.list()) {
       if (entity is! File) continue;
       try {

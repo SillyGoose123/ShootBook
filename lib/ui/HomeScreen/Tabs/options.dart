@@ -1,5 +1,4 @@
 import 'dart:ui';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import "package:shootbook/localisation/app_localizations.dart";
 import 'package:shootbook/disag/disag_client.dart';
@@ -64,7 +63,7 @@ class _OptionsState extends State<Options> {
       if (mounted) {
         await saver.saveAll(res, context);
       }
-    } on TokenException catch (e) {
+    } on TokenException catch (e) {    // ignore: unused_catch_clause
       setState(() {
         login = true;
       });

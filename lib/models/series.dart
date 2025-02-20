@@ -22,7 +22,7 @@ class Series {
       value += shot.value;
     }
 
-    return Series(shots, value, isProbe);
+    return Series(shots, double.parse(value.toStringAsPrecision(2)), isProbe);
   }
 
   factory Series.fromJson(Map<String, dynamic> json) => _$SeriesFromJson(json);

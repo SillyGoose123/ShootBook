@@ -65,7 +65,7 @@ class _ResultState extends State<Results> {
 
   Future<void> _loadResults() async {
     ModelSaver saver = await ModelSaver.getInstance();
-    var temp = await saver.load();
+    var temp = await saver.load(true);
 
     setState(() {
       results = temp;

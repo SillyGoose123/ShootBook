@@ -8,7 +8,6 @@ class Shot {
   @JsonKey(required: true)
   final int x, y;
 
-
   @JsonKey(required: true)
   final double value;
 
