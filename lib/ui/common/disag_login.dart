@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shootbook/disag/disag_client.dart';
 import 'package:shootbook/disag/disag_utils.dart';
-import "package:shootbook/localisation/app_localizations.dart";
+import "package:shootbook/localizations/app_localizations.dart";
 import 'package:shootbook/ui/common/utils.dart';
 
 class DisagLogin extends StatefulWidget {
@@ -55,7 +55,7 @@ class _DisagLoginState extends State<DisagLogin> {
                       }),
                   decoration: InputDecoration(
                       icon: Icon(Icons.alternate_email),
-                      label: const Text("Email"))),
+                      labelText: "Email")),
               TextField(
                   controller: pswController,
                   obscureText: true,
@@ -67,7 +67,7 @@ class _DisagLoginState extends State<DisagLogin> {
                       }),
                   decoration: InputDecoration(
                       icon: Icon(CupertinoIcons.padlock),
-                      label: Text(locale.password))),
+                      labelText: locale.password)),
               ElevatedButton(
                   onPressed: isInputValid() ? onPress : null,
                   child: Text(locale.loginDisag))

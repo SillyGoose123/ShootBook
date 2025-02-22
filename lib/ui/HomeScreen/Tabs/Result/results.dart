@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:shootbook/models/model_saver.dart';
 import 'package:shootbook/models/result.dart';
 import 'package:shootbook/ui/HomeScreen/Tabs/Result/result_card.dart';
-import "package:shootbook/localisation/app_localizations.dart";
+import "package:shootbook/localizations/app_localizations.dart";
 
 class Results extends StatefulWidget {
   final CupertinoTabController tabController;
