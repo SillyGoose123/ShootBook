@@ -16,7 +16,7 @@ Series _$SeriesFromJson(Map<String, dynamic> json) {
         .map((e) => Shot.fromJson(e as Map<String, dynamic>))
         .toList(),
     (json['value'] as num).toDouble(),
-    json['isProbe'] as bool? ?? false,
+    json['isPractice'] as bool? ?? false,
   );
 }
 
