@@ -1,6 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import "package:shootbook/localisation/app_localizations.dart";
+import "package:shootbook/localizations/app_localizations.dart";
 import 'package:shootbook/disag/disag_client.dart';
 import 'package:shootbook/models/model_saver.dart';
 import 'package:shootbook/ui/common/disag_login.dart';
@@ -16,7 +16,7 @@ class Options extends StatefulWidget {
 }
 
 class _OptionsState extends State<Options> {
-  AppLocalizations? locale;
+  late AppLocalizations locale;
   bool login = false;
   BuildContext? dialogContext;
 
@@ -39,11 +39,11 @@ class _OptionsState extends State<Options> {
       ElevatedButton.icon(
           onPressed: dialogContext == null ? _disagClientImport : null,
           icon: Icon(Icons.download),
-          label: Text(locale!.importDisagResults)),
+          label: Text(locale.importDisagResults)),
       ElevatedButton.icon(
           onPressed: () => ApiClient.logout(),
           icon: Icon(Icons.logout),
-          label: Text(locale!.logout)),
+          label: Text(locale.logout)),
     ]);
   }
 
@@ -55,7 +55,7 @@ class _OptionsState extends State<Options> {
 
   Future<void> _disagClientImport() async {
     try {
-      ApiClient client = await ApiClient.getInstance(locale!);
+      ApiClient client = await ApiClient.getInstance(locale);
       showLoadingDialog();
       List<Result> res = await client.getAllResults();
 
@@ -69,7 +69,7 @@ class _OptionsState extends State<Options> {
       });
     } catch (e) {
       if (mounted) {
-        showSnackBarError(locale!.importFailed, context);
+        showSnackBarError(locale.importFailed, context);
       }
     }
     if (dialogContext != null && dialogContext!.mounted) {
@@ -95,7 +95,7 @@ class _OptionsState extends State<Options> {
                         spacing: 10,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text("${locale!.importDisagResults}..."),
+                          Text("${locale.importDisagResults}..."),
                           Center(child: CircularProgressIndicator())
                         ],
                       ))));

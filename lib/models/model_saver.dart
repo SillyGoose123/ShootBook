@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:shootbook/localisation/app_localizations.dart';
+import "package:shootbook/localizations/app_localizations.dart";
 import 'package:shootbook/models/result.dart';
 import 'package:shootbook/models/result_type.dart';
 import 'package:shootbook/ui/common/utils.dart';

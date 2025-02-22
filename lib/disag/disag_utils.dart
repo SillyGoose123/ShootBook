@@ -1,5 +1,5 @@
 import 'package:shootbook/models/result.dart';
-import "package:shootbook/localisation/app_localizations.dart";
+import "package:shootbook/localizations/app_localizations.dart";
 import '../models/result_type.dart';
 
 List<Result> gatherAllResults(List<dynamic> json, AppLocalizations locale) {

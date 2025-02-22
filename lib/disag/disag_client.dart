@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:shootbook/disag/disag_utils.dart';
 import 'package:shootbook/models/model_saver.dart';
 import 'package:shootbook/models/result.dart';
-import "package:shootbook/localisation/app_localizations.dart";
+import "package:shootbook/localizations/app_localizations.dart";
 
 String tokenKey = "disagKey";
 FlutterSecureStorage storage = FlutterSecureStorage();
