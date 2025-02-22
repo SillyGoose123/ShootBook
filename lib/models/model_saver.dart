@@ -29,7 +29,7 @@ class ModelSaver {
   }
 
   Future<void> _writeToFiles() async {
-    var encoder = JsonEncoder.withIndent("     ");
+    var encoder = JsonEncoder.withIndent("  ");
 
     for (ResultType type in _storedResults.keys) {
       for (Result result in _storedResults[type] ?? []) {

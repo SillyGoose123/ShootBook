@@ -1,6 +1,6 @@
 {
-  "newTimeComment": "This was shot with new Time",
-  "oldTimeComment": "This was shot in old time",
+  "newTimeComment": "This was shot with new time.",
+  "oldTimeComment": "This was shot in old time.",
   "password": "Password",
   "disagLoginExplanation": "Email & Password aren't stored on your device. Only a temporary access token.",
   "loginDisag": "Login to Disag",
