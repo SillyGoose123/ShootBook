@@ -3,7 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:shootbook/ui/HomeScreen/Tabs/options.dart';
 
 import 'Tabs/Result/results.dart';
-import 'Tabs/scanner.dart';
+import 'Tabs/Scanner/scanner.dart';
+
+class TabIndex {
+  static const int scanner = 0;
+  static const int results = 1;
+  static const int options = 2;
+}
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -26,7 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return CupertinoTabScaffold(
         controller: _tabController,
-        tabBar: CupertinoTabBar(items: [
+        tabBar: CupertinoTabBar(backgroundColor: Color.fromRGBO(20, 20, 26, 1.0), items: [
           BottomNavigationBarItem(icon: Icon(CupertinoIcons.qrcode_viewfinder)),
           BottomNavigationBarItem(icon: Icon(CupertinoIcons.scope)),
           BottomNavigationBarItem(icon: Icon(Icons.settings))
@@ -34,7 +40,9 @@ class _HomeScreenState extends State<HomeScreen> {
         tabBuilder: (BuildContext context, int index) {
           return CupertinoTabView(builder: (BuildContext context) {
             return Padding(
-                padding: index == 0 ? EdgeInsets.zero : const EdgeInsets.fromLTRB(16, 50, 16, 16),
+                padding: index == 0
+                    ? EdgeInsets.zero
+                    : const EdgeInsets.fromLTRB(16, 50, 16, 16),
                 child: _buildTabs(index));
           });
         });
@@ -42,10 +50,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildTabs(int index) {
     switch (index) {
-      case 0:
+      case TabIndex.scanner:
         return Scanner(tabController: _tabController, myIndex: index);
 
-      case 2:
+      case TabIndex.options:
         return Options();
 
       default:

@@ -28,7 +28,7 @@ class _OptionsState extends State<Options> {
       return PopScope(
           canPop: false,
           onPopInvokedWithResult: onPop,
-          child: DisagLogin(onLogin: (ApiClient client) {
+          child: DisagLogin(onLogin: (DisagClient client) {
             setState(() {
               login = false;
             });
@@ -41,7 +41,7 @@ class _OptionsState extends State<Options> {
           icon: Icon(Icons.download),
           label: Text(locale.importDisagResults)),
       ElevatedButton.icon(
-          onPressed: () => ApiClient.logout(),
+          onPressed: () => DisagClient.logout(),
           icon: Icon(Icons.logout),
           label: Text(locale.logout)),
     ]);
@@ -55,7 +55,7 @@ class _OptionsState extends State<Options> {
 
   Future<void> _disagClientImport() async {
     try {
-      ApiClient client = await ApiClient.getInstance(locale);
+      DisagClient client = await DisagClient.getInstance(locale);
       showLoadingDialog();
       List<Result> res = await client.getAllResults();
 

@@ -8,7 +8,7 @@ import 'package:shootbook/ui/common/utils.dart';
 class DisagLogin extends StatefulWidget {
   const DisagLogin({super.key, required this.onLogin});
 
-  final void Function(ApiClient client) onLogin;
+  final void Function(DisagClient client) onLogin;
 
   @override
   State<StatefulWidget> createState() => _DisagLoginState();
@@ -88,7 +88,7 @@ class _DisagLoginState extends State<DisagLogin> {
   }
 
   void onPress() {
-    ApiClient.login(emailController.text, pswController.text, locale)
+    DisagClient.login(emailController.text, pswController.text, locale)
         .then((value) => widget.onLogin(value))
         .catchError((e) {
           setState(() {
