@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import "package:shootbook/localisation/app_localizations.dart";
+import "package:shootbook/localizations/app_localizations.dart";
 import 'package:shootbook/ui/HomeScreen/homescreen.dart';
 
 void main() {
@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Flutter Demo',
+        title: 'ShootBook',
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
       theme: ThemeData(
