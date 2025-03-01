@@ -4,7 +4,7 @@ import 'package:shootbook/disag/disag_utils.dart';
 import 'package:shootbook/models/result_type.dart';
 import 'package:shootbook/models/series.dart';
 import 'package:shootbook/models/shot.dart';
-import "package:shootbook/localisation/app_localizations.dart";
+import "package:shootbook/localizations/app_localizations.dart";
 
 part "result.g.dart";
 
