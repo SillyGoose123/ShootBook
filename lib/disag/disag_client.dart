@@ -14,14 +14,14 @@ class TokenException implements Exception {
   TokenException(String s);
 }
 
-class ApiClient {
-  static ApiClient? instance;
+class DisagClient {
+  static DisagClient? instance;
   final String _token;
   final AppLocalizations _locale;
 
-  ApiClient._create(this._token, this._locale);
+  DisagClient._create(this._token, this._locale);
 
-  static Future<ApiClient> getInstance(AppLocalizations locale) async {
+  static Future<DisagClient> getInstance(AppLocalizations locale) async {
     if (instance == null) {
       //load token from store
       final token = await storage.read(key: tokenKey);
@@ -35,17 +35,17 @@ class ApiClient {
             "Stored token is invalid user need to login first");
       }
 
-      instance = ApiClient._create(token, locale);
+      instance = DisagClient._create(token, locale);
     }
 
     return instance!;
   }
 
-  static Future<ApiClient> login(String email, String password,
-      AppLocalizations locale) async {
+  static Future<DisagClient> login(
+      String email, String password, AppLocalizations locale) async {
     if (instance != null) {
       throw Exception(
-        "ApiClient already instantiated. Logout before you login.");
+          "ApiClient already instantiated. Logout before you login.");
     }
 
     String token = await _getToken(email, password);
@@ -53,7 +53,7 @@ class ApiClient {
     //write to store
     await storage.write(key: tokenKey, value: token);
 
-    instance = ApiClient._create(token, locale);
+    instance = DisagClient._create(token, locale);
 
     return instance!;
   }
@@ -64,10 +64,9 @@ class ApiClient {
   }
 
   static Future<bool> _checkToken(String token) async {
-    var res = await http.get(
-        Uri.parse("https://shotsapp.disag.de/api/user/profile"), headers: {
-      HttpHeaders.authorizationHeader:
-      "Bearer $token",
+    var res = await http
+        .get(Uri.parse("https://shotsapp.disag.de/api/user/profile"), headers: {
+      HttpHeaders.authorizationHeader: "Bearer $token",
     });
 
     if (res.statusCode != 200) {
@@ -78,8 +77,7 @@ class ApiClient {
   }
 
   static Future<String> _getToken(String email, String password) async {
-    var req =
-    http.MultipartRequest(
+    var req = http.MultipartRequest(
         "POST", Uri.parse("https://shotsapp.disag.de/api/token"));
 
     req.fields["email"] = email;
@@ -95,8 +93,8 @@ class ApiClient {
     return res.stream.bytesToString();
   }
 
-  Future<http.StreamedResponse> makeRequest(http.BaseRequest req,
-      String errorMsg) async {
+  Future<http.StreamedResponse> makeRequest(
+      http.BaseRequest req, String errorMsg) async {
     req.headers.addAll({
       HttpHeaders.authorizationHeader: "Bearer $_token",
     });
@@ -114,11 +112,11 @@ class ApiClient {
     return res;
   }
 
-  Future<http.StreamedResponse> _qrRequest(String qrCodeLink,
-      bool isPreview) async {
-    var req =
-    http.MultipartRequest("POST", Uri.parse(
-        "https://shosapp.disag.de/api/results${isPreview ? "/preview" : ""}"));
+  Future<http.StreamedResponse> _qrRequest(
+      String qrCodeLink, bool isPreview) async {
+    var req = http.MultipartRequest(
+        "POST", Uri.parse("https://shotsapp.disag.de/api/results"));
+
     req.fields["data"] = qrCodeLink;
 
     return await makeRequest(req, "Failed fetching qr code data");
@@ -127,13 +125,12 @@ class ApiClient {
   Future<Result> getQrCodeDataPreview(String qrCodeLink) async {
     var res = await _qrRequest(qrCodeLink, true);
     var json = jsonDecode(await res.stream.bytesToString());
-
     return Result.fromDisag(json, _locale);
   }
 
   Future<List<dynamic>> _makeResultReq() async {
-    var req = http.Request(
-        "GET", Uri.parse("https://shotsapp.disag.de/api/results"));
+    var req =
+        http.Request("GET", Uri.parse("https://shotsapp.disag.de/api/results"));
     var res = await makeRequest(req, "Failed fetching your results.");
     var body = await res.stream.bytesToString();
 
@@ -141,8 +138,8 @@ class ApiClient {
   }
 
   Future<void> acceptResult(String qrCodeLink) async {
-    Map<String, dynamic> res = jsonDecode(
-        (await _qrRequest(qrCodeLink, false)).toString());
+    Map<String, dynamic> res =
+        jsonDecode((await _qrRequest(qrCodeLink, false)).toString());
     List<dynamic> results = await _makeResultReq();
 
     if (results.contains({"id": res["id"]})) {
@@ -163,5 +160,4 @@ class ApiClient {
         "DELETE", Uri.parse("https://shotsapp.disag.de/api/results/$id}"));
     await makeRequest(req, "Couldn't delete result (id: $id).");
   }
-
 }

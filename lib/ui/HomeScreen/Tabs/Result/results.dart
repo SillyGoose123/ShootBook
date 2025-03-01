@@ -50,7 +50,7 @@ class _ResultState extends State<Results> {
               CupertinoIcons.nosign,
               size: 150.0,
             ),
-            Text(locale.noResults)
+            Text(locale.noResults, textAlign: TextAlign.center,)
           ]);
     }
 
