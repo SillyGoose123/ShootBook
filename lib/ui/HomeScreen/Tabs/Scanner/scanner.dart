@@ -28,7 +28,6 @@ class _ScannerState extends State<Scanner> {
   late AppLocalizations _locale;
   Result? scannedResult;
   String? curUrl;
-  PersistentBottomSheetController? _controller;
 
   @override
   void didChangeDependencies() {
