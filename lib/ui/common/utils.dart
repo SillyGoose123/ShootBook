@@ -6,8 +6,8 @@ void showSnackBarError(String msg, BuildContext context) {
     msg,
     type: AnimatedSnackBarType.error,
     mobileSnackBarPosition: MobileSnackBarPosition.bottom,
-      mobilePositionSettings: const MobilePositionSettings(
-      bottomOnAppearance: 80,
+      mobilePositionSettings: MobilePositionSettings(
+      bottomOnAppearance: 5,
       ),
     duration: Duration(seconds: 5)
   ).show(context);

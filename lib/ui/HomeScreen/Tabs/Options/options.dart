@@ -1,15 +1,19 @@
 import 'dart:ui';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shootbook/disag/disag_utils.dart';
 import "package:shootbook/localizations/app_localizations.dart";
 import 'package:shootbook/disag/disag_client.dart';
 import 'package:shootbook/models/model_saver.dart';
-import 'package:shootbook/ui/common/disag_login.dart';
+import 'package:shootbook/disag/disag_login.dart';
 import 'package:shootbook/ui/common/utils.dart';
-
-import '../../../models/result.dart';
+import 'package:shootbook/models/result.dart';
 
 class Options extends StatefulWidget {
-  const Options({super.key});
+  final CupertinoTabController tabController;
+  final int myIndex;
+
+  const Options({super.key, required this.tabController, required this.myIndex});
 
   @override
   State<Options> createState() => _OptionsState();
@@ -27,7 +31,7 @@ class _OptionsState extends State<Options> {
     if (login) {
       return PopScope(
           canPop: false,
-          onPopInvokedWithResult: onPop,
+          onPopInvokedWithResult: _onPop,
           child: DisagLogin(onLogin: (DisagClient client) {
             setState(() {
               login = false;
@@ -44,10 +48,14 @@ class _OptionsState extends State<Options> {
           onPressed: () => DisagClient.logout(),
           icon: Icon(Icons.logout),
           label: Text(locale.logout)),
+      ElevatedButton.icon(
+          onPressed: dialogContext == null ? _deleteAllResults : null,
+          icon: Icon(CupertinoIcons.delete),
+          label: Text(locale.deleteAll)),
     ]);
   }
 
-  void onPop(bool close, test) {
+  void _onPop(bool close, test) {
     setState(() {
       login = false;
     });
@@ -56,14 +64,14 @@ class _OptionsState extends State<Options> {
   Future<void> _disagClientImport() async {
     try {
       DisagClient client = await DisagClient.getInstance(locale);
-      showLoadingDialog();
+      _showLoadingDialog(locale.importingDisagResults);
       List<Result> res = await client.getAllResults();
 
       ModelSaver saver = await ModelSaver.getInstance();
       if (mounted) {
         await saver.saveAll(res, context);
       }
-    } on TokenException catch (e) {    // ignore: unused_catch_clause
+    } on TokenException catch (e) {
       setState(() {
         login = true;
       });
@@ -80,7 +88,7 @@ class _OptionsState extends State<Options> {
     }
   }
 
-  void showLoadingDialog() {
+  void _showLoadingDialog(String text) {
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -95,11 +103,66 @@ class _OptionsState extends State<Options> {
                         spacing: 10,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text("${locale.importDisagResults}..."),
+                          Text("$text..."),
                           Center(child: CircularProgressIndicator())
                         ],
                       ))));
         });
     setState(() {});
+  }
+
+  Future<void> _deleteResults() async {
+    _showLoadingDialog(locale.deleteAll);
+    ModelSaver saver = await ModelSaver.getInstance();
+    await saver.deleteAll();
+    Navigator.pop(dialogContext!);
+    setState(() {
+      dialogContext = null;
+    });
+  }
+
+  void _deleteAllResults() {
+    showCupertinoModalPopup<void>(
+      context: context,
+      builder: (context) => CupertinoActionSheet(
+        title: Text(locale.deleteTitle),
+        message: Text(locale.deleteAll),
+        actions: <CupertinoDialogAction>[
+          CupertinoDialogAction(
+            isDefaultAction: true,
+            onPressed: () => Navigator.pop(context),
+            child: Text(locale.no),
+          ),
+          CupertinoDialogAction(
+            isDestructiveAction: true,
+            onPressed: () {
+              Navigator.pop(context);
+              _deleteResults();
+            },
+            child: Text(locale.yes),
+          ),
+          CupertinoDialogAction(
+            isDestructiveAction: true,
+            onPressed: () async {
+              Navigator.pop(context);
+              _showLoadingDialog(locale.deleteAll);
+              try {
+                await deleteAllResults(locale);
+              } on TokenException catch(e) {
+                setState(() {
+                  login = true;
+                });
+              }
+
+              Navigator.pop(dialogContext!);
+              setState(() {
+                dialogContext = null;
+              });
+            },
+            child: Text(locale.yesDisag),
+          ),
+        ],
+      ),
+    );
   }
 }
