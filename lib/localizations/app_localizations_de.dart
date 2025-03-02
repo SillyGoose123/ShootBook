@@ -67,4 +67,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get resultAlreadyStored => 'Result ist schon gespeichert.';
+
+  @override
+  String get export => 'Exportieren';
 }

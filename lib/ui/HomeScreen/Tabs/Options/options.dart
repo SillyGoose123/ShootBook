@@ -52,6 +52,10 @@ class _OptionsState extends State<Options> {
           onPressed: dialogContext == null ? _deleteAllResults : null,
           icon: Icon(CupertinoIcons.delete),
           label: Text(locale.deleteAll)),
+      ElevatedButton.icon(
+          onPressed: _zipExport,
+          icon: Icon(CupertinoIcons.arrow_up_doc),
+          label: Text(locale.export)),
     ]);
   }
 
@@ -164,5 +168,10 @@ class _OptionsState extends State<Options> {
         ],
       ),
     );
+  }
+
+  Future<void> _zipExport() async {
+    ModelSaver saver = await ModelSaver.getInstance();
+    await saver.createZip(true);
   }
 }

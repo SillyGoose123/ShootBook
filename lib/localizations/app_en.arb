@@ -28,5 +28,6 @@
   "yes": "Yes",
   "yesDisag": "Yes in Disag too",
 
-  "resultAlreadyStored": "Result already saved."
+  "resultAlreadyStored": "Result already saved.",
+  "export": "Export"
 }

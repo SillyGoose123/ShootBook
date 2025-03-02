@@ -1,7 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_archive/flutter_archive.dart';
+import 'package:intl/intl.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import "package:shootbook/localizations/app_localizations.dart";
 import 'package:shootbook/models/result.dart';
 import 'package:shootbook/models/result_type.dart';
@@ -24,7 +28,7 @@ class ModelSaver {
     final appDir = await getApplicationDocumentsDirectory();
     Directory dir = Directory("${appDir.path}/results");
 
-    if(!await dir.exists()) {
+    if (!await dir.exists()) {
       dir = await dir.create();
     }
 
@@ -82,7 +86,7 @@ class ModelSaver {
   }
 
   Future<List<Result>> load(bool? loadAgain) async {
-    if((loadAgain != null && loadAgain) || !_loaded) {
+    if ((loadAgain != null && loadAgain) || !_loaded) {
       _loaded = true;
       _storedResults = {};
       //load if not loaded before
@@ -116,7 +120,7 @@ class ModelSaver {
       try {
         final contents = await File(entity.path).readAsString();
         final fileResult = Result.fromJson(jsonDecode(contents));
-        if(fileResult == result) {
+        if (fileResult == result) {
           await entity.delete();
         }
       } catch (e) {
@@ -135,10 +139,42 @@ class ModelSaver {
       }
     }
   }
+
+  Future<File> createZip(bool store) async {
+    var status = await Permission.storage.status;
+    if (!status.isGranted) {
+      await Permission.storage.request();
+    }
+
+    final Directory? downloadsDir = Platform.isAndroid
+        ? Directory("/storage/emulated/0/Download")
+        : await getDownloadsDirectory();
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+
+    load(false);
+
+    final zipFile = File(
+        "${downloadsDir?.path}/${packageInfo.appName}_export_${formatDate(DateTime.now().toLocal())}.zip");
+
+    ZipFile.createFromDirectory(sourceDir: _directory, zipFile: zipFile);
+
+    if (store) {
+      zipFile.create(recursive: true);
+      zipFile.writeAsBytes(await zipFile.readAsBytes());
+    }
+    return zipFile;
+  }
 }
 
 bool containsResult(List<Result> results, Result result) {
   return results.indexWhere((Result res) =>
           res.value == result.value && res.timestamp == result.timestamp) !=
       -1;
+}
+
+
+String formatDate(DateTime timestamp) {
+  return DateFormat(
+    "d-M-y_HH-mm",
+  ).format(timestamp);
 }

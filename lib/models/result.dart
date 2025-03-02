@@ -1,6 +1,7 @@
 import 'package:intl/intl.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:shootbook/disag/disag_utils.dart';
+import 'package:shootbook/models/model_saver.dart';
 import 'package:shootbook/models/result_type.dart';
 import 'package:shootbook/models/series.dart';
 import 'package:shootbook/models/shot.dart';
@@ -83,7 +84,7 @@ class Result {
   }
 
   String toFileString() {
-    return "/${type.toText()}_${timestamp.toIso8601String()}.json";
+    return "/${type.toText()}_${formatDate(timestamp.toLocal())}.json";
   }
 
   String formatTime() {
