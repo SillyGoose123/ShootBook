@@ -76,7 +76,7 @@ class _ScannerState extends State<Scanner> {
       await saver.save(scannedResult!);
       widget.tabController.index = TabIndex.results;
     } on ResultAlreadyStoredException catch (e) {
-      if(mounted) showSnackBarError(_locale.resultAlreadyStored, context);
+      if (mounted) showSnackBarError(_locale.resultAlreadyStored, context);
     }
 
     setState(() {
@@ -99,21 +99,27 @@ class _ScannerState extends State<Scanner> {
       return Center(child: CircularProgressIndicator());
     }
 
-    return  AiBarcodeScanner(
+    if(scannedResult != null) {
+      curUrl = null;
+    }
+
+    return AiBarcodeScanner(
         hideSheetDragHandler: true,
         hideSheetTitle: true,
         onDetect: _detectHandler,
         validator: _validate,
         hideGalleryButton: true,
         controller: _scanController,
-        bottomSheetBuilder: (context, controller) => scannedResult == null ? SizedBox.shrink() :ScannerBottomSheet(result: scannedResult!, onSave: _onSaveHandler)
-    );
+        bottomSheetBuilder: (context, controller) => scannedResult == null
+            ? SizedBox.shrink()
+            : ScannerBottomSheet(
+                result: scannedResult!, onSave: _onSaveHandler));
   }
 
   Future<void> _detectHandler(BarcodeCapture capture) async {
     final scanUrl = capture.barcodes[0].displayValue;
 
-    if (scanUrl == null || curUrl == scanUrl) {
+    if (scanUrl == null || curUrl != null || scanUrl == curUrl) {
       return;
     }
 
@@ -126,7 +132,7 @@ class _ScannerState extends State<Scanner> {
       setState(() {
         scannedResult = result;
       });
-    } on TokenException catch(e) {
+    } on TokenException catch (e) {
       setState(() {
         scannedResult = null;
         _login = true;
@@ -136,7 +142,7 @@ class _ScannerState extends State<Scanner> {
 
   bool _validate(BarcodeCapture capture) {
     return capture.barcodes[0].displayValue
-            ?.startsWith("https://qr.shotsapp.de/?uuid=") ??
+        ?.startsWith("https://qr.shotsapp.de/?uuid=") ??
         false;
   }
 }
