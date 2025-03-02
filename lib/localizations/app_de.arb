@@ -19,5 +19,14 @@
         "type": "String"
       }
     }
-  }
+  },
+
+  "deleteAll": "Alle Ergebnise löschen",
+  "deleteTitle": "Löschen?",
+  "sureDeletingAll": "Sind sie sicher alle Ergebnisse zu löschen?",
+  "no": "Nein",
+  "yes": "Ja",
+  "yesDisag": "Ja und auch in Disag",
+
+  "resultAlreadyStored": "Result ist schon gespeichert."
 }

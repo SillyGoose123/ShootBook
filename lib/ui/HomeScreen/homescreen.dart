@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:shootbook/ui/HomeScreen/Tabs/options.dart';
+import 'package:shootbook/ui/HomeScreen/Tabs/Options/options.dart';
 
 import 'Tabs/Result/results.dart';
 import 'Tabs/Scanner/scanner.dart';
@@ -54,7 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
         return Scanner(tabController: _tabController, myIndex: index);
 
       case TabIndex.options:
-        return Options();
+        return Options(tabController: _tabController, myIndex: index);
 
       default:
         return Results(tabController: _tabController, myIndex: index);

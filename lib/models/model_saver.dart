@@ -7,6 +7,10 @@ import 'package:shootbook/models/result.dart';
 import 'package:shootbook/models/result_type.dart';
 import 'package:shootbook/ui/common/utils.dart';
 
+class ResultAlreadyStoredException implements Exception {
+  ResultAlreadyStoredException(String s);
+}
+
 //https://docs.flutter.dev/cookbook/persistence/reading-writing-files
 class ModelSaver {
   static ModelSaver? _instance;
@@ -60,7 +64,7 @@ class ModelSaver {
   Future<void> save(Result result) async {
     if (_storedResults[result.type] != null &&
         containsResult(_storedResults[result.type]!, result)) {
-      throw Exception("Result already stored.");
+      throw ResultAlreadyStoredException("Result already stored.");
     }
 
     if (_storedResults[result.type] == null) _storedResults[result.type] = [];
@@ -100,6 +104,32 @@ class ModelSaver {
           _storedResults[result.type] = [];
         }
         _storedResults[result.type]!.add(result);
+      } catch (e) {
+        continue;
+      }
+    }
+  }
+
+  Future<void> delete(Result result) async {
+    await for (var entity in _directory.list()) {
+      if (entity is! File) continue;
+      try {
+        final contents = await File(entity.path).readAsString();
+        final fileResult = Result.fromJson(jsonDecode(contents));
+        if(fileResult == result) {
+          await entity.delete();
+        }
+      } catch (e) {
+        continue;
+      }
+    }
+  }
+
+  Future<void> deleteAll() async {
+    await for (var entity in _directory.list()) {
+      if (entity is! File) continue;
+      try {
+        await entity.delete();
       } catch (e) {
         continue;
       }

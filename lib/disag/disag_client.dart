@@ -103,7 +103,7 @@ class DisagClient {
 
     if (res.statusCode != 200) {
       if (await _checkToken(_token)) {
-        throw Exception("Token expired.");
+        throw TokenException("Token expired.");
       }
 
       throw Exception(errorMsg);
@@ -128,7 +128,7 @@ class DisagClient {
     return Result.fromDisag(json, _locale);
   }
 
-  Future<List<dynamic>> _makeResultReq() async {
+  Future<List<dynamic>> makeResultReq() async {
     var req =
         http.Request("GET", Uri.parse("https://shotsapp.disag.de/api/results"));
     var res = await makeRequest(req, "Failed fetching your results.");
@@ -140,10 +140,10 @@ class DisagClient {
   Future<void> acceptResult(String qrCodeLink) async {
     Map<String, dynamic> res =
         jsonDecode((await _qrRequest(qrCodeLink, false)).toString());
-    List<dynamic> results = await _makeResultReq();
+    List<dynamic> results = await makeResultReq();
 
     if (results.contains({"id": res["id"]})) {
-      throw Exception("Result already added.");
+      throw ResultAlreadyStoredException("Result already added.");
     }
 
     ModelSaver saver = await ModelSaver.getInstance();
@@ -151,13 +151,14 @@ class DisagClient {
   }
 
   Future<List<Result>> getAllResults() async {
-    var res = await _makeResultReq();
+    var res = await makeResultReq();
     return gatherAllResults(res, _locale);
   }
 
   Future<void> deleteResult(String id) async {
     var req = http.Request(
-        "DELETE", Uri.parse("https://shotsapp.disag.de/api/results/$id}"));
+        "DELETE", Uri.parse("https://shotsapp.disag.de/api/results/$id"));
+
     await makeRequest(req, "Couldn't delete result (id: $id).");
   }
 }
