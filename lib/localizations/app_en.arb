@@ -19,5 +19,14 @@
         "type": "String"
       }
     }
-  }
+  },
+
+  "deleteAll": "Delete All Results",
+  "deleteTitle": "Delete?",
+  "sureDeletingAll": "Sure deleting all Results?",
+  "no": "No",
+  "yes": "Yes",
+  "yesDisag": "Yes in Disag too",
+
+  "resultAlreadyStored": "Result already saved."
 }

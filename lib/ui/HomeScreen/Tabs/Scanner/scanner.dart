@@ -5,7 +5,8 @@ import 'package:shootbook/disag/disag_client.dart';
 import "package:shootbook/localizations/app_localizations.dart";
 import 'package:shootbook/models/model_saver.dart';
 import 'package:shootbook/ui/HomeScreen/Tabs/Scanner/scanner_popup.dart';
-import 'package:shootbook/ui/common/disag_login.dart';
+import 'package:shootbook/disag/disag_login.dart';
+import 'package:shootbook/ui/common/utils.dart';
 import '../../../../models/result.dart';
 import '../../homescreen.dart';
 
@@ -70,12 +71,17 @@ class _ScannerState extends State<Scanner> {
   }
 
   Future<void> _onSaveHandler() async {
-    ModelSaver saver = await ModelSaver.getInstance();
-    saver.save(scannedResult!);
+    try {
+      ModelSaver saver = await ModelSaver.getInstance();
+      await saver.save(scannedResult!);
+      widget.tabController.index = TabIndex.results;
+    } on ResultAlreadyStoredException catch (e) {
+      if(mounted) showSnackBarError(_locale.resultAlreadyStored, context);
+    }
+
     setState(() {
       scannedResult = null;
     });
-    widget.tabController.index = TabIndex.results;
   }
 
   @override
@@ -113,12 +119,19 @@ class _ScannerState extends State<Scanner> {
 
     curUrl = scanUrl;
 
-    DisagClient client = await DisagClient.getInstance(_locale);
-    Result result = await client.getQrCodeDataPreview(scanUrl);
+    try {
+      DisagClient client = await DisagClient.getInstance(_locale);
+      Result result = await client.getQrCodeDataPreview(scanUrl);
 
-    setState(() {
-      scannedResult = result;
-    });
+      setState(() {
+        scannedResult = result;
+      });
+    } on TokenException catch(e) {
+      setState(() {
+        scannedResult = null;
+        _login = true;
+      });
+    }
   }
 
   bool _validate(BarcodeCapture capture) {

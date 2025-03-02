@@ -7,10 +7,10 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get newTimeComment => 'This was shot with new Time';
+  String get newTimeComment => 'This was shot with new time.';
 
   @override
-  String get oldTimeComment => 'This was shot in old time';
+  String get oldTimeComment => 'This was shot in old time.';
 
   @override
   String get password => 'Password';
@@ -46,4 +46,25 @@ class AppLocalizationsEn extends AppLocalizations {
   String importOfFailed(String name) {
     return 'Result $name couldn\'t be imported';
   }
+
+  @override
+  String get deleteAll => 'Delete All Results';
+
+  @override
+  String get deleteTitle => 'Delete?';
+
+  @override
+  String get sureDeletingAll => 'Sure deleting all Results?';
+
+  @override
+  String get no => 'No';
+
+  @override
+  String get yes => 'Yes';
+
+  @override
+  String get yesDisag => 'Yes in Disag too';
+
+  @override
+  String get resultAlreadyStored => 'Result already saved.';
 }
