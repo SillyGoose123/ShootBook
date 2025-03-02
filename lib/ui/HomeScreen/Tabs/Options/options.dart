@@ -1,4 +1,6 @@
+import 'dart:io';
 import 'dart:ui';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shootbook/disag/disag_utils.dart';
@@ -172,6 +174,11 @@ class _OptionsState extends State<Options> {
 
   Future<void> _zipExport() async {
     ModelSaver saver = await ModelSaver.getInstance();
-    await saver.createZip(true);
+    File file = await saver.createZip();
+    var bytes = await file.readAsBytes();
+    await FilePicker.platform.saveFile(
+      fileName: file.path.split("/").last,
+      bytes: bytes
+    );
   }
 }

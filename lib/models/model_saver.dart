@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:archive/archive_io.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_archive/flutter_archive.dart';
 import 'package:intl/intl.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
@@ -140,28 +140,27 @@ class ModelSaver {
     }
   }
 
-  Future<File> createZip(bool store) async {
+  Future<File> createZip() async {
     var status = await Permission.storage.status;
     if (!status.isGranted) {
       await Permission.storage.request();
     }
 
-    final Directory? downloadsDir = Platform.isAndroid
-        ? Directory("/storage/emulated/0/Download")
-        : await getDownloadsDirectory();
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
-
     load(false);
 
-    final zipFile = File(
-        "${downloadsDir?.path}/${packageInfo.appName}_export_${formatDate(DateTime.now().toLocal())}.zip");
+    final zipFile = File("${_directory.parent.path}/backups/${packageInfo.appName}_export_${formatDate(DateTime.now().toLocal())}.zip");
 
-    ZipFile.createFromDirectory(sourceDir: _directory, zipFile: zipFile);
+    final zipper = ZipFileEncoder();
+    zipper.create(zipFile.path);
 
-    if (store) {
-      zipFile.create(recursive: true);
-      zipFile.writeAsBytes(await zipFile.readAsBytes());
+    await for (var entity in _directory.list()) {
+      if (entity is! File) continue;
+      await zipper.addFile(entity);
     }
+
+    zipper.close();
+
     return zipFile;
   }
 }

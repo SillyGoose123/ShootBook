@@ -22,6 +22,9 @@ dependencies:
   flutter_archive: ^6.0.3
   package_info_plus: ^8.3.0
   permission_handler: ^11.4.0
+  archive: ^4.0.4
+  file_picker: ^9.0.2
+
 
 dev_dependencies:
   flutter_test:
