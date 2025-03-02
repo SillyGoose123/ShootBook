@@ -28,5 +28,6 @@
   "yes": "Ja",
   "yesDisag": "Ja und auch in Disag",
 
-  "resultAlreadyStored": "Result ist schon gespeichert."
+  "resultAlreadyStored": "Result ist schon gespeichert.",
+  "export": "Exportieren"
 }

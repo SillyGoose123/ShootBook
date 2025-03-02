@@ -214,6 +214,12 @@ abstract class AppLocalizations {
   /// In de, this message translates to:
   /// **'Result ist schon gespeichert.'**
   String get resultAlreadyStored;
+
+  /// No description provided for @export.
+  ///
+  /// In de, this message translates to:
+  /// **'Exportieren'**
+  String get export;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
