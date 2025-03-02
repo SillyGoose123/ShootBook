@@ -72,7 +72,6 @@ class _OptionsState extends State<Options> {
         await saver.saveAll(res, context);
       }
     } on TokenException catch (e) {
-      // ignore: unused_catch_clause
       setState(() {
         login = true;
       });
