@@ -97,81 +97,123 @@ abstract class AppLocalizations {
 
   /// No description provided for @newTimeComment.
   ///
-  /// In en, this message translates to:
-  /// **'This was shot with new Time'**
+  /// In de, this message translates to:
+  /// **'Das wurde mit den neuen Schießzeiten geschossen.'**
   String get newTimeComment;
 
   /// No description provided for @oldTimeComment.
   ///
-  /// In en, this message translates to:
-  /// **'This was shot in old time'**
+  /// In de, this message translates to:
+  /// **'Das wurde mit den alten Schießzeiten geschossen.'**
   String get oldTimeComment;
 
   /// No description provided for @password.
   ///
-  /// In en, this message translates to:
-  /// **'Password'**
+  /// In de, this message translates to:
+  /// **'Passwort'**
   String get password;
 
   /// No description provided for @disagLoginExplanation.
   ///
-  /// In en, this message translates to:
-  /// **'Email & Password aren\'t stored on your device. Only a temporary access token.'**
+  /// In de, this message translates to:
+  /// **'Email & Passwort werden nicht auf ihrem Gerät gespeichert. Nur ein temporärer zugangs Token.'**
   String get disagLoginExplanation;
 
   /// No description provided for @loginDisag.
   ///
-  /// In en, this message translates to:
-  /// **'Login to Disag'**
+  /// In de, this message translates to:
+  /// **'Bei Disag Anmelden'**
   String get loginDisag;
 
   /// No description provided for @noResults.
   ///
-  /// In en, this message translates to:
-  /// **'No results found. Scan or import them in the settings.'**
+  /// In de, this message translates to:
+  /// **'Keine Ergebnisse vorhanden. Scannen oder Importieren sie welche in den Einstellungen.'**
   String get noResults;
 
   /// No description provided for @importDisagResults.
   ///
-  /// In en, this message translates to:
-  /// **'Import Disag Results'**
+  /// In de, this message translates to:
+  /// **'Disag Ergebnisse Importieren'**
   String get importDisagResults;
 
   /// No description provided for @importingDisagResults.
   ///
-  /// In en, this message translates to:
-  /// **'Importing Disag Results...'**
+  /// In de, this message translates to:
+  /// **'Disag Ergebnisse werden importiert...'**
   String get importingDisagResults;
 
   /// No description provided for @invalidEmail.
   ///
-  /// In en, this message translates to:
-  /// **'Invalid Email'**
+  /// In de, this message translates to:
+  /// **'Ungültige Emailaddresse'**
   String get invalidEmail;
 
   /// No description provided for @logout.
   ///
-  /// In en, this message translates to:
-  /// **'Logout from Disag'**
+  /// In de, this message translates to:
+  /// **'Abmelden von Disag'**
   String get logout;
 
   /// No description provided for @loginFailed.
   ///
-  /// In en, this message translates to:
-  /// **'Login failed'**
+  /// In de, this message translates to:
+  /// **'Falsche Anmeldedaten'**
   String get loginFailed;
 
   /// No description provided for @importFailed.
   ///
-  /// In en, this message translates to:
-  /// **'Result import failed'**
+  /// In de, this message translates to:
+  /// **'Ergebnis Import fehlgeschlagen'**
   String get importFailed;
 
   /// No description provided for @importOfFailed.
   ///
-  /// In en, this message translates to:
-  /// **'Result {name} couldn\'t be imported'**
+  /// In de, this message translates to:
+  /// **'Ergebnis {name} konnte nicht importiert werden'**
   String importOfFailed(String name);
+
+  /// No description provided for @deleteAll.
+  ///
+  /// In de, this message translates to:
+  /// **'Alle Ergebnise löschen'**
+  String get deleteAll;
+
+  /// No description provided for @deleteTitle.
+  ///
+  /// In de, this message translates to:
+  /// **'Löschen?'**
+  String get deleteTitle;
+
+  /// No description provided for @sureDeletingAll.
+  ///
+  /// In de, this message translates to:
+  /// **'Sind sie sicher alle Ergebnisse zu löschen?'**
+  String get sureDeletingAll;
+
+  /// No description provided for @no.
+  ///
+  /// In de, this message translates to:
+  /// **'Nein'**
+  String get no;
+
+  /// No description provided for @yes.
+  ///
+  /// In de, this message translates to:
+  /// **'Ja'**
+  String get yes;
+
+  /// No description provided for @yesDisag.
+  ///
+  /// In de, this message translates to:
+  /// **'Ja und auch in Disag'**
+  String get yesDisag;
+
+  /// No description provided for @resultAlreadyStored.
+  ///
+  /// In de, this message translates to:
+  /// **'Result ist schon gespeichert.'**
+  String get resultAlreadyStored;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
