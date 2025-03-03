@@ -6,8 +6,8 @@ import 'Tabs/Result/results.dart';
 import 'Tabs/Scanner/scanner.dart';
 
 class TabIndex {
-  static const int scanner = 0;
-  static const int results = 1;
+  static const int results = 0;
+  static const int scanner = 1;
   static const int options = 2;
 }
 
@@ -25,7 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     // Create TabController for getting the index of current tab
-    _tabController = CupertinoTabController(initialIndex: 1);
+    _tabController = CupertinoTabController(initialIndex: TabIndex.results);
   }
 
   @override
@@ -33,14 +33,14 @@ class _HomeScreenState extends State<HomeScreen> {
     return CupertinoTabScaffold(
         controller: _tabController,
         tabBar: CupertinoTabBar(backgroundColor: Color.fromRGBO(20, 20, 26, 1.0), items: [
-          BottomNavigationBarItem(icon: Icon(CupertinoIcons.qrcode_viewfinder)),
           BottomNavigationBarItem(icon: Icon(CupertinoIcons.scope)),
+          BottomNavigationBarItem(icon: Icon(CupertinoIcons.qrcode_viewfinder)),
           BottomNavigationBarItem(icon: Icon(Icons.settings))
         ]),
         tabBuilder: (BuildContext context, int index) {
           return CupertinoTabView(builder: (BuildContext context) {
             return Padding(
-                padding: index == 0
+                padding: index == TabIndex.scanner
                     ? EdgeInsets.zero
                     : const EdgeInsets.fromLTRB(16, 50, 16, 16),
                 child: _buildTabs(index));
