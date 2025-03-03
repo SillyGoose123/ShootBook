@@ -27,7 +27,9 @@
   "no": "Nein",
   "yes": "Ja",
   "yesDisag": "Ja und auch in Disag",
+  "yesCloud": "Ja und auch in Cloud",
 
   "resultAlreadyStored": "Result ist schon gespeichert.",
-  "export": "Exportieren"
+  "export": "Exportieren",
+  "import": "Importieren"
 }

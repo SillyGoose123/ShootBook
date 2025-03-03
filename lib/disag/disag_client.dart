@@ -4,7 +4,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:shootbook/disag/disag_utils.dart';
 import 'package:shootbook/models/model_saver.dart';
-import 'package:shootbook/models/result.dart';
+import 'package:shootbook/models/shooting/result.dart';
 import "package:shootbook/localizations/app_localizations.dart";
 
 String tokenKey = "disagKey";

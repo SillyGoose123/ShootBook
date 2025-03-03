@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:shootbook/models/shot.dart';
+import 'package:shootbook/models/shooting/shot.dart';
 
 part "series.g.dart";
 @JsonSerializable()

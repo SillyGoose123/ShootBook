@@ -209,6 +209,12 @@ abstract class AppLocalizations {
   /// **'Ja und auch in Disag'**
   String get yesDisag;
 
+  /// No description provided for @yesCloud.
+  ///
+  /// In de, this message translates to:
+  /// **'Ja und auch in Cloud'**
+  String get yesCloud;
+
   /// No description provided for @resultAlreadyStored.
   ///
   /// In de, this message translates to:
@@ -220,6 +226,12 @@ abstract class AppLocalizations {
   /// In de, this message translates to:
   /// **'Exportieren'**
   String get export;
+
+  /// No description provided for @import.
+  ///
+  /// In de, this message translates to:
+  /// **'Importieren'**
+  String get import;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

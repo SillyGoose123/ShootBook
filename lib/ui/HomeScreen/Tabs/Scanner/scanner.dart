@@ -3,11 +3,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shootbook/disag/disag_client.dart';
 import "package:shootbook/localizations/app_localizations.dart";
+import 'package:shootbook/models/backup/backup_client.dart';
 import 'package:shootbook/models/model_saver.dart';
 import 'package:shootbook/ui/HomeScreen/Tabs/Scanner/scanner_popup.dart';
 import 'package:shootbook/disag/disag_login.dart';
 import 'package:shootbook/ui/common/utils.dart';
-import '../../../../models/result.dart';
+import '../../../../models/shooting/result.dart';
 import '../../homescreen.dart';
 
 class Scanner extends StatefulWidget {
@@ -74,6 +75,12 @@ class _ScannerState extends State<Scanner> {
     try {
       ModelSaver saver = await ModelSaver.getInstance();
       await saver.save(scannedResult!);
+
+      BackupClient? client = await BackupClient.getInstance();
+      if(client != null) {
+        client.add(scannedResult!);
+      }
+
       widget.tabController.index = TabIndex.results;
     } on ResultAlreadyStoredException catch (e) {
       if (mounted) showSnackBarError(_locale.resultAlreadyStored, context);
