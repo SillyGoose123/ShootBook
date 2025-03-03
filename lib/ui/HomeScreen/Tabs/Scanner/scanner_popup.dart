@@ -1,8 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:shootbook/models/result_type.dart';
 import 'package:shootbook/ui/HomeScreen/Tabs/Result/shot_view.dart';
-import '../../../../models/result.dart';
+import '../../../../models/shooting/result.dart';
 
 class ScannerBottomSheet extends StatefulWidget {
   final Result result;

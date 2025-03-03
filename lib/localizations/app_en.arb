@@ -27,6 +27,9 @@
   "no": "No",
   "yes": "Yes",
   "yesDisag": "Yes in Disag too",
+  "yesCloud": "Yes in Cloud too",
 
-  "resultAlreadyStored": "Result already saved."
+  "resultAlreadyStored": "Result already saved.",
+  "export": "Export",
+  "import": "Import"
 }
