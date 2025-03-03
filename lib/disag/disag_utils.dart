@@ -1,8 +1,8 @@
 import 'package:shootbook/disag/disag_client.dart';
 import 'package:shootbook/models/model_saver.dart';
-import 'package:shootbook/models/result.dart';
+import 'package:shootbook/models/shooting/result.dart';
 import "package:shootbook/localizations/app_localizations.dart";
-import '../models/result_type.dart';
+import '../models/shooting/result_type.dart';
 
 List<Result> gatherAllResults(List<dynamic> json, AppLocalizations locale) {
   List<Result> results = [];

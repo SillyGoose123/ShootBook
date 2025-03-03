@@ -66,8 +66,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get yesDisag => 'Yes in Disag too';
 
   @override
+  String get yesCloud => 'Yes in Cloud too';
+
+  @override
   String get resultAlreadyStored => 'Result already saved.';
 
   @override
   String get export => 'Export';
+
+  @override
+  String get import => 'Import';
 }

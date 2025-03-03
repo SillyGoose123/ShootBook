@@ -5,10 +5,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
 import "package:shootbook/localizations/app_localizations.dart";
-import 'package:shootbook/models/result.dart';
-import 'package:shootbook/models/result_type.dart';
+import 'package:shootbook/models/shooting/result.dart';
+import 'package:shootbook/models/shooting/result_type.dart';
 import 'package:shootbook/ui/common/utils.dart';
 
 class ResultAlreadyStoredException implements Exception {
@@ -19,10 +18,11 @@ class ResultAlreadyStoredException implements Exception {
 class ModelSaver {
   static ModelSaver? _instance;
   final Directory _directory;
+  final Directory _backupDirectory;
   Map<ResultType, List<Result>> _storedResults = {};
   bool _loaded = false;
 
-  ModelSaver._create(this._directory);
+  ModelSaver._create(this._directory, this._backupDirectory);
 
   static Future<ModelSaver> getInstance() async {
     final appDir = await getApplicationDocumentsDirectory();
@@ -32,21 +32,17 @@ class ModelSaver {
       dir = await dir.create();
     }
 
-    _instance ??= ModelSaver._create(dir);
+    _instance ??= ModelSaver._create(dir, Directory("${appDir.path}/backups"));
     return _instance!;
   }
 
   Future<void> _writeToFiles() async {
-    var encoder = JsonEncoder.withIndent("  ");
-
     for (ResultType type in _storedResults.keys) {
       for (Result result in _storedResults[type] ?? []) {
-        File file = File(_directory.path + result.toFileString());
+        File file = File("${_directory.path}/${result.toFileString()}");
         file.create();
 
-        String json = encoder.convert(result.toJson());
-
-        await file.writeAsString(json);
+        await file.writeAsString(result.toFormatedJson());
       }
     }
   }
@@ -141,15 +137,10 @@ class ModelSaver {
   }
 
   Future<File> createZip() async {
-    var status = await Permission.storage.status;
-    if (!status.isGranted) {
-      await Permission.storage.request();
-    }
-
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     load(false);
 
-    final zipFile = File("${_directory.parent.path}/backups/${packageInfo.appName}_export_${formatDate(DateTime.now().toLocal())}.zip");
+    final zipFile = File("${_backupDirectory.path}/${packageInfo.appName}_export_${formatDate(DateTime.now().toLocal())}.zip");
 
     final zipper = ZipFileEncoder();
     zipper.create(zipFile.path);
@@ -163,6 +154,21 @@ class ModelSaver {
 
     return zipFile;
   }
+
+  Future<void> zipExportCleanUp() async {
+    Directory cacheDir = await getApplicationCacheDirectory();
+    //remove cache
+    await cacheDir.delete(recursive: true);
+
+    //remove backup
+    await _backupDirectory.delete(recursive: true);
+  }
+
+  Future<void> importZip(File file) async {
+    extractFileToDisk(file.path, _directory.path);
+    load(true);
+  }
+
 }
 
 bool containsResult(List<Result> results, Result result) {
