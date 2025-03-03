@@ -1,19 +1,24 @@
+import 'dart:io';
 import 'dart:ui';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shootbook/disag/disag_utils.dart';
 import "package:shootbook/localizations/app_localizations.dart";
 import 'package:shootbook/disag/disag_client.dart';
+import 'package:shootbook/models/backup/backup_client.dart';
 import 'package:shootbook/models/model_saver.dart';
 import 'package:shootbook/disag/disag_login.dart';
+import 'package:shootbook/ui/HomeScreen/Tabs/Options/backup_type_select.dart';
 import 'package:shootbook/ui/common/utils.dart';
-import 'package:shootbook/models/result.dart';
+import 'package:shootbook/models/shooting/result.dart';
 
 class Options extends StatefulWidget {
   final CupertinoTabController tabController;
   final int myIndex;
 
-  const Options({super.key, required this.tabController, required this.myIndex});
+  const Options(
+      {super.key, required this.tabController, required this.myIndex});
 
   @override
   State<Options> createState() => _OptionsState();
@@ -52,6 +57,22 @@ class _OptionsState extends State<Options> {
           onPressed: dialogContext == null ? _deleteAllResults : null,
           icon: Icon(CupertinoIcons.delete),
           label: Text(locale.deleteAll)),
+      ElevatedButton.icon(
+          onPressed: _zipExport,
+          icon: Icon(CupertinoIcons.arrow_up_doc),
+          label: Text(locale.export)),
+      ElevatedButton.icon(
+          onPressed: _zipImport,
+          icon: Icon(CupertinoIcons.arrow_down_doc),
+          label: Text(locale.import)),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [BackupTypeSelect()],
+      ),
+      ElevatedButton.icon(
+          onPressed: _cloudImport,
+          icon: Icon(CupertinoIcons.cloud_download),
+          label: Text(locale.import)),
     ]);
   }
 
@@ -148,7 +169,7 @@ class _OptionsState extends State<Options> {
               _showLoadingDialog(locale.deleteAll);
               try {
                 await deleteAllResults(locale);
-              } on TokenException catch(e) {
+              } on TokenException catch (e) {
                 setState(() {
                   login = true;
                 });
@@ -161,8 +182,59 @@ class _OptionsState extends State<Options> {
             },
             child: Text(locale.yesDisag),
           ),
+          CupertinoDialogAction(
+            isDestructiveAction: true,
+            onPressed: () async {
+              Navigator.pop(context);
+              _showLoadingDialog(locale.deleteAll);
+              try {
+                await deleteAllResults(locale);
+              } on TokenException catch (e) {
+                setState(() {
+                  login = true;
+                });
+              }
+
+              Navigator.pop(dialogContext!);
+              setState(() {
+                dialogContext = null;
+              });
+            },
+            child: Text(locale.yesCloud),
+          )
         ],
       ),
     );
+  }
+
+  Future<void> _zipExport() async {
+    ModelSaver saver = await ModelSaver.getInstance();
+    File file = await saver.createZip();
+
+    var bytes = await file.readAsBytes();
+    await FilePicker.platform
+        .saveFile(fileName: file.path.split("/").last, bytes: bytes);
+
+    saver.zipExportCleanUp();
+  }
+
+  Future<void> _zipImport() async {
+    FilePickerResult? result = await FilePicker.platform
+        .pickFiles(type: FileType.custom, allowedExtensions: ["zip"]);
+
+    if (result != null) {
+      File file = File(result.files.single.path!);
+      ModelSaver saver = await ModelSaver.getInstance();
+      saver.importZip(file);
+    }
+  }
+
+  Future<void> _cloudImport() async {
+    BackupClient? client = await BackupClient.getInstance();
+
+    //TODO: error handling
+    if (client == null) throw "";
+
+    client.import();
   }
 }

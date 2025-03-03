@@ -3,6 +3,7 @@ import "package:shootbook/localizations/app_localizations.dart";
 import 'package:shootbook/ui/HomeScreen/homescreen.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 

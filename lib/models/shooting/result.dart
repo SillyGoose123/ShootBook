@@ -1,9 +1,12 @@
+import 'dart:convert';
+
 import 'package:intl/intl.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:shootbook/disag/disag_utils.dart';
-import 'package:shootbook/models/result_type.dart';
-import 'package:shootbook/models/series.dart';
-import 'package:shootbook/models/shot.dart';
+import 'package:shootbook/models/model_saver.dart';
+import 'package:shootbook/models/shooting/result_type.dart';
+import 'package:shootbook/models/shooting/series.dart';
+import 'package:shootbook/models/shooting/shot.dart';
 import "package:shootbook/localizations/app_localizations.dart";
 
 part "result.g.dart";
@@ -71,6 +74,11 @@ class Result {
 
   Map<String, dynamic> toJson() => _$ResultToJson(this);
 
+  String toFormatedJson()  {
+    JsonEncoder encoder = JsonEncoder.withIndent("  ");
+    return encoder.convert(toJson());
+  }
+
   int calcNonTenthValue() {
     int value = 0;
 
@@ -83,11 +91,13 @@ class Result {
   }
 
   String toFileString() {
-    return "/${type.toText()}_${timestamp.toIso8601String()}.json";
+    return "${type.toText()}_${formatDate(timestamp.toLocal())}.json";
   }
 
   String formatTime() {
-    return DateFormat("d.M.y, HH:mm",).format(timestamp.toLocal());
+    return DateFormat(
+      "d.M.y, HH:mm",
+    ).format(timestamp.toLocal());
   }
 
   @override

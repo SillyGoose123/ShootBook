@@ -1,7 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:shootbook/models/result_type.dart';
-
-import '../../../../models/result.dart';
+import '../../../../models/shooting/result.dart';
 
 class ResultCard extends StatelessWidget {
   final Result result;

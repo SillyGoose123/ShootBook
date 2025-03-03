@@ -51,10 +51,8 @@ enum ResultType {
   @JsonValue("KKPD40")
   kkpd40,
   @JsonValue("KKPD60")
-  kkpd60,
-}
+  kkpd60;
 
-extension ResultTypeEx on ResultType {
   String toText() => _$ResultTypeEnumMap[this]!;
 
   int getShootCount() {

@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shootbook/models/model_saver.dart';
-import 'package:shootbook/models/result.dart';
+import 'package:shootbook/models/shooting/result.dart';
 import 'package:shootbook/ui/HomeScreen/Tabs/Result/result_card.dart';
 import "package:shootbook/localizations/app_localizations.dart";
 
