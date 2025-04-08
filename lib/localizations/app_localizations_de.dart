@@ -76,4 +76,10 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get import => 'Importieren';
+
+  @override
+  String get qrCodeScanFailed => 'Qr Code konnte nicht gelesen werden.';
+
+  @override
+  String get saveFailed => 'Speichern des Results fehlgeschlagen.';
 }

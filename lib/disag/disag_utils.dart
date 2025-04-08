@@ -29,12 +29,12 @@ ResultType typeFromDisag(String disagType) {
     //lp 20
     case "50_5":
     case "300_2":
-      return ResultType.lg20;
+      return ResultType.lp20;
 
     //lp 40
     case "50_6":
     case "300_4":
-      return ResultType.lg40;
+      return ResultType.lp40;
 
     default:
       throw Exception("Unknown Disag type: $disagType");

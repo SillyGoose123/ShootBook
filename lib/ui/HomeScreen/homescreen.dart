@@ -42,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
             return Padding(
                 padding: index == 0
                     ? EdgeInsets.zero
-                    : const EdgeInsets.fromLTRB(16, 50, 16, 16),
+                    : const EdgeInsets.fromLTRB(5, 50, 5, 0),
                 child: _buildTabs(index));
           });
         });

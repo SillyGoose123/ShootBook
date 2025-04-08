@@ -76,4 +76,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get import => 'Import';
+
+  @override
+  String get qrCodeScanFailed => 'Qr Code reading failed.';
+
+  @override
+  String get saveFailed => 'Couln\'t save result.';
 }
