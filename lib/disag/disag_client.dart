@@ -12,6 +12,7 @@ FlutterSecureStorage storage = FlutterSecureStorage();
 
 class TokenException implements Exception {
   TokenException(String s);
+
 }
 
 class DisagClient {
