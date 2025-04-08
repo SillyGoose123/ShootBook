@@ -31,5 +31,7 @@
 
   "resultAlreadyStored": "Result already saved.",
   "export": "Export",
-  "import": "Import"
+  "import": "Import",
+  "qrCodeScanFailed": "Qr Code reading failed.",
+  "saveFailed": "Couln't save result."
 }

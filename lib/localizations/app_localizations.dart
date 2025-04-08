@@ -232,6 +232,18 @@ abstract class AppLocalizations {
   /// In de, this message translates to:
   /// **'Importieren'**
   String get import;
+
+  /// No description provided for @qrCodeScanFailed.
+  ///
+  /// In de, this message translates to:
+  /// **'Qr Code konnte nicht gelesen werden.'**
+  String get qrCodeScanFailed;
+
+  /// No description provided for @saveFailed.
+  ///
+  /// In de, this message translates to:
+  /// **'Speichern des Results fehlgeschlagen.'**
+  String get saveFailed;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

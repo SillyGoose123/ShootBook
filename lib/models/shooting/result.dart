@@ -30,8 +30,6 @@ class Result {
 
   Result(this.series, this.value, this.type, this.comment, this.timestamp);
 
-  void delete() {}
-
   factory Result.fromDisag(Map<String, dynamic> json, AppLocalizations locale) {
     List<Series> series = [];
     List<Shot> shots = [];
@@ -61,7 +59,7 @@ class Result {
 
     final comment =
         isNewTime(disagType) ? locale.newTimeComment : locale.oldTimeComment;
-    final DateTime time = DateTime.parse(json["created_at"]);
+    final DateTime time = json["created_at"] != null ?DateTime.parse(json["created_at"]) : DateTime.now();
 
     // round value with precision 2
     value = double.parse(value.toStringAsFixed(2));
@@ -88,6 +86,10 @@ class Result {
     }
 
     return value;
+  }
+
+  List<Shot> getAllShots() {
+    return series.expand((list) => list.shots).toList();
   }
 
   String toFileString() {

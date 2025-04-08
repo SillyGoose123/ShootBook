@@ -94,7 +94,7 @@ class DisagClient {
     return res.stream.bytesToString();
   }
 
-  Future<http.StreamedResponse> makeRequest(
+  Future<http.StreamedResponse> _makeRequest(
       http.BaseRequest req, String errorMsg) async {
     req.headers.addAll({
       HttpHeaders.authorizationHeader: "Bearer $_token",
@@ -116,11 +116,13 @@ class DisagClient {
   Future<http.StreamedResponse> _qrRequest(
       String qrCodeLink, bool isPreview) async {
     var req = http.MultipartRequest(
-        "POST", Uri.parse("https://shotsapp.disag.de/api/results"));
+        "POST",
+        Uri.parse(
+            "https://shotsapp.disag.de/api/results${isPreview ? "/preview" : ""}"));
 
     req.fields["data"] = qrCodeLink;
 
-    return await makeRequest(req, "Failed fetching qr code data");
+    return await _makeRequest(req, "Failed fetching qr code data");
   }
 
   Future<Result> getQrCodeDataPreview(String qrCodeLink) async {
@@ -132,23 +134,18 @@ class DisagClient {
   Future<List<dynamic>> makeResultReq() async {
     var req =
         http.Request("GET", Uri.parse("https://shotsapp.disag.de/api/results"));
-    var res = await makeRequest(req, "Failed fetching your results.");
+    var res = await _makeRequest(req, "Failed fetching your results.");
     var body = await res.stream.bytesToString();
 
     return jsonDecode(body)["data"];
   }
 
   Future<void> acceptResult(String qrCodeLink) async {
-    Map<String, dynamic> res =
-        jsonDecode((await _qrRequest(qrCodeLink, false)).toString());
-    List<dynamic> results = await makeResultReq();
-
-    if (results.contains({"id": res["id"]})) {
-      throw ResultAlreadyStoredException("Result already added.");
-    }
+    var res = await _qrRequest(qrCodeLink, false);
+    Map<String, dynamic> resJson = jsonDecode(await res.stream.bytesToString());
 
     ModelSaver saver = await ModelSaver.getInstance();
-    saver.save(Result.fromDisag(res, _locale));
+    await saver.save(Result.fromDisag(resJson, _locale));
   }
 
   Future<List<Result>> getAllResults() async {
@@ -160,6 +157,6 @@ class DisagClient {
     var req = http.Request(
         "DELETE", Uri.parse("https://shotsapp.disag.de/api/results/$id"));
 
-    await makeRequest(req, "Couldn't delete result (id: $id).");
+    await _makeRequest(req, "Couldn't delete result (id: $id).");
   }
 }

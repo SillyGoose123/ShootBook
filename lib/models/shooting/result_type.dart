@@ -1,6 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
 part 'result_type.g.dart';
+
 @JsonEnum(alwaysCreate: true)
 enum ResultType {
   //LG
@@ -59,7 +60,7 @@ enum ResultType {
     RegExp regExp = RegExp(r'\d+');
     Match? match = regExp.firstMatch(toString());
 
-    if(match == null) throw Exception("Incorrect type.");
+    if (match == null) throw Exception("Incorrect type.");
 
     return int.parse(match.group(0)!);
   }
