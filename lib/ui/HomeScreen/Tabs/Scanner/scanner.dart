@@ -1,15 +1,18 @@
-import 'package:ai_barcode_scanner/ai_barcode_scanner.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:shootbook/disag/disag_client.dart';
-import "package:shootbook/localizations/app_localizations.dart";
-import 'package:shootbook/models/backup/backup_client.dart';
-import 'package:shootbook/models/model_saver.dart';
-import 'package:shootbook/ui/HomeScreen/Tabs/Scanner/scanner_popup.dart';
-import 'package:shootbook/disag/disag_login.dart';
-import 'package:shootbook/ui/common/utils.dart';
-import '../../../../models/shooting/result.dart';
-import '../../homescreen.dart';
+import "dart:async";
+import "package:flutter/cupertino.dart";
+import "package:flutter/material.dart";
+import "package:mobile_scanner/mobile_scanner.dart";
+import "package:shootbook/disag/disag_client.dart";
+import "package:shootbook/disag/disag_login.dart";
+import "package:shootbook/ui/HomeScreen/Tabs/Scanner/scanner_overlay.dart";
+import "package:shootbook/ui/HomeScreen/Tabs/Scanner/scanner_popup.dart";
+
+import "../../../../localizations/app_localizations.dart";
+import "../../../../models/backup/backup_client.dart";
+import "../../../../models/model_saver.dart";
+import "../../../../models/shooting/result.dart";
+import "../../../common/utils.dart";
+import "../../homescreen.dart";
 
 class Scanner extends StatefulWidget {
   final CupertinoTabController tabController;
@@ -23,133 +26,140 @@ class Scanner extends StatefulWidget {
 }
 
 class _ScannerState extends State<Scanner> {
-  bool _login = false;
-  DisagClient? _client;
-  final MobileScannerController _scanController =
-      MobileScannerController(autoStart: true, useNewCameraSelector: true);
   late AppLocalizations _locale;
-  Result? scannedResult;
-  String? curUrl;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _tryLogin();
-  }
+  final MobileScannerController controller =
+      MobileScannerController(formats: BarcodeFormat.values);
+  bool _login = false;
+  String? _curUrl;
+  Widget? bottomSheet;
+  DisagClient? _client;
 
   @override
   void initState() {
     super.initState();
-
-    //detect when tab is open again
     widget.tabController.addListener(() {
       if (widget.tabController.index == widget.myIndex) {
-        _scanController.start();
-        _tryLogin();
+        controller.start();
       } else {
-        _scanController.pause();
+        controller.pause();
       }
     });
   }
 
-  Future<void> _tryLogin() async {
-    setState(() {
-      _login = false;
-    });
-
-    try {
-      var tempClient =
-          await DisagClient.getInstance(AppLocalizations.of(context)!);
-      setState(() {
-        _client = tempClient;
-      });
-    } catch (e) {
-      setState(() {
-        _client = null;
-        _login = true;
-      });
-    }
-  }
-
-  Future<void> _onSaveHandler() async {
+  Future<void> _onSaveHandler(Result scannedResult) async {
     try {
       ModelSaver saver = await ModelSaver.getInstance();
-      await saver.save(scannedResult!);
+      await saver.save(scannedResult);
 
       BackupClient? client = await BackupClient.getInstance();
-      if(client != null) {
-        client.add(scannedResult!);
+      if (client != null) {
+        client.add(scannedResult);
       }
 
       widget.tabController.index = TabIndex.results;
     } on ResultAlreadyStoredException catch (e) {
       if (mounted) showSnackBarError(_locale.resultAlreadyStored, context);
     }
+  }
 
-    setState(() {
-      scannedResult = null;
-    });
+  Future<void> _onDetect(BarcodeCapture capture) async {
+    String url = capture.barcodes.last.url!.url;
+
+    if (url == _curUrl) return;
+
+    try {
+      Result scannedResult =
+          await _client!.getQrCodeDataPreview(capture.barcodes.last.url!.url);
+
+      if (!mounted) return;
+      setState(() {
+        bottomSheet = ScannerBottomSheet(
+            result: scannedResult, onSave: () => _onSaveHandler(scannedResult));
+      });
+      _curUrl = url;
+    } catch (e) {
+      print("ECXPPEPEPEPPEPEPPEPPE: ${e.toString()}");
+      if (!mounted || _login) return;
+      showSnackBarError(_locale.loginFailed, context);
+      setState(() {
+        _login = true;
+        _curUrl = null;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     _locale = AppLocalizations.of(context)!;
 
-    if (_client == null && _login) {
-      return DisagLogin(
-          onLogin: (DisagClient client) => setState(() {
-                _client = client;
-              }));
-    }
-
     if (_client == null) {
+      DisagClient.getInstance(_locale)
+          .then((client) => setState(() {
+                _client = client;
+              }))
+          .catchError((e) {
+        setState(() {
+          _login = true;
+        });
+      });
+
       return Center(child: CircularProgressIndicator());
     }
 
-    if(scannedResult != null) {
-      curUrl = null;
+    if (_login) {
+      return PopScope(
+          canPop: false,
+          child: DisagLogin(onLogin: (DisagClient client) {
+            setState(() {
+              _login = false;
+              _client = client;
+            });
+          }));
     }
 
-    return AiBarcodeScanner(
-        hideSheetDragHandler: true,
-        hideSheetTitle: true,
-        onDetect: _detectHandler,
-        validator: _validate,
-        hideGalleryButton: true,
-        controller: _scanController,
-        bottomSheetBuilder: (context, controller) => scannedResult == null
-            ? SizedBox.shrink()
-            : ScannerBottomSheet(
-                result: scannedResult!, onSave: _onSaveHandler));
+    Size screenSize = MediaQuery.of(context).size;
+    double scanSize = screenSize.width - (screenSize.width * 0.25);
+
+    controller.start();
+    return Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          foregroundColor: Colors.white,
+          elevation: 0,
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.cameraswitch_rounded),
+              onPressed: controller.switchCamera,
+            ),
+            IconButton(
+              icon: controller.torchEnabled
+                  ? const Icon(Icons.flashlight_off_rounded)
+                  : const Icon(Icons.flashlight_on_rounded),
+              onPressed: controller.toggleTorch,
+            ),
+          ],
+        ),
+        bottomSheet: bottomSheet,
+        extendBodyBehindAppBar: true,
+        body: Stack(children: [
+          MobileScanner(
+            controller: controller,
+            fit: BoxFit.cover,
+            onDetect: _onDetect,
+          ),
+          Center(child: CustomPaint(
+            foregroundPainter: BorderPainter(),
+            child: SizedBox(
+              width: scanSize,
+              height: scanSize,
+            ),
+          ))
+        ]));
   }
 
-  Future<void> _detectHandler(BarcodeCapture capture) async {
-    final scanUrl = capture.barcodes[0].displayValue;
-
-    if (scanUrl == null || curUrl != null || scanUrl == curUrl) {
-      return;
-    }
-
-    curUrl = scanUrl;
-
-    try {
-      DisagClient client = await DisagClient.getInstance(_locale);
-      Result result = await client.getQrCodeDataPreview(scanUrl);
-
-      setState(() {
-        scannedResult = result;
-      });
-    } on TokenException catch (e) {
-      setState(() {
-        scannedResult = null;
-        _login = true;
-      });
-    }
-  }
-
-  bool _validate(BarcodeCapture capture) {
-    return capture.barcodes[0].displayValue
-        ?.startsWith("https://qr.shotsapp.de/?uuid=") ??
-        false;
+  @override
+  Future<void> dispose() async {
+    super.dispose();
+    await controller.dispose();
   }
 }
