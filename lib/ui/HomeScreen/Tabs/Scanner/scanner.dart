@@ -43,6 +43,9 @@ class _ScannerState extends State<Scanner> {
       } else {
         controller.pause();
       }
+
+      bottomSheet = null;
+      _curUrl = null;
     });
   }
 
@@ -55,11 +58,12 @@ class _ScannerState extends State<Scanner> {
       if (client != null) {
         client.add(scannedResult);
       }
-
-      widget.tabController.index = TabIndex.results;
     } on ResultAlreadyStoredException catch (e) {
       if (mounted) showSnackBarError(_locale.resultAlreadyStored, context);
+      return;
     }
+
+    widget.tabController.index = TabIndex.results;
   }
 
   Future<void> _onDetect(BarcodeCapture capture) async {
@@ -78,7 +82,6 @@ class _ScannerState extends State<Scanner> {
       });
       _curUrl = url;
     } catch (e) {
-      print("ECXPPEPEPEPPEPEPPEPPE: ${e.toString()}");
       if (!mounted || _login) return;
       showSnackBarError(_locale.loginFailed, context);
       setState(() {
