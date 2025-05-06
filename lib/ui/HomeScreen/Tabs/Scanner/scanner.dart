@@ -1,4 +1,5 @@
 import "dart:async";
+
 import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
 import "package:mobile_scanner/mobile_scanner.dart";
@@ -8,7 +9,6 @@ import "package:shootbook/ui/HomeScreen/Tabs/Scanner/scanner_overlay.dart";
 import "package:shootbook/ui/HomeScreen/Tabs/Scanner/scanner_popup.dart";
 
 import "../../../../localizations/app_localizations.dart";
-import "../../../../models/backup/backup_client.dart";
 import "../../../../models/model_saver.dart";
 import "../../../../models/shooting/result.dart";
 import "../../../common/utils.dart";
@@ -27,18 +27,23 @@ class Scanner extends StatefulWidget {
 
 class _ScannerState extends State<Scanner> {
   late AppLocalizations _locale;
-  final MobileScannerController controller =
-      MobileScannerController(formats: BarcodeFormat.values);
+  MobileScannerController controller = MobileScannerController(
+      formats: BarcodeFormat.values, useNewCameraSelector: true, cameraResolution: Size(1920, 1080));
   bool _login = false;
   String? _curUrl;
   Widget? bottomSheet;
   DisagClient? _client;
+  double _currentSliderValue = 0;
 
   @override
   void initState() {
     super.initState();
     widget.tabController.addListener(() {
       if (widget.tabController.index == widget.myIndex) {
+        controller.setZoomScale(0);
+        setState(() {
+          _currentSliderValue = 0;
+        });
         controller.start();
       } else {
         controller.pause();
@@ -49,15 +54,9 @@ class _ScannerState extends State<Scanner> {
     });
   }
 
-  Future<void> _onSaveHandler(Result scannedResult) async {
+  Future<void> _onSaveHandler(Result scannedResult, String url) async {
     try {
-      ModelSaver saver = await ModelSaver.getInstance();
-      await saver.save(scannedResult);
-
-      BackupClient? client = await BackupClient.getInstance();
-      if (client != null) {
-        client.add(scannedResult);
-      }
+      _client!.acceptResult(url);
     } on ResultAlreadyStoredException catch (e) {
       if (mounted) showSnackBarError(_locale.resultAlreadyStored, context);
       return;
@@ -78,7 +77,8 @@ class _ScannerState extends State<Scanner> {
       if (!mounted) return;
       setState(() {
         bottomSheet = ScannerBottomSheet(
-            result: scannedResult, onSave: () => _onSaveHandler(scannedResult));
+            result: scannedResult,
+            onSave: () => _onSaveHandler(scannedResult, url));
       });
       _curUrl = url;
     } catch (e) {
@@ -131,6 +131,15 @@ class _ScannerState extends State<Scanner> {
           elevation: 0,
           actions: [
             IconButton(
+              icon: const Icon(CupertinoIcons.arrow_2_circlepath),
+              onPressed: () {
+                controller.setZoomScale(0);
+                setState(() {
+                  _currentSliderValue = 0;
+                });
+              },
+            ),
+            IconButton(
               icon: const Icon(Icons.cameraswitch_rounded),
               onPressed: controller.switchCamera,
             ),
@@ -150,13 +159,40 @@ class _ScannerState extends State<Scanner> {
             fit: BoxFit.cover,
             onDetect: _onDetect,
           ),
-          Center(child: CustomPaint(
-            foregroundPainter: BorderPainter(),
-            child: SizedBox(
-              width: scanSize,
-              height: scanSize,
-            ),
-          ))
+          Column(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            SizedBox.shrink(),
+            Center(
+                child: CustomPaint(
+              foregroundPainter: BorderPainter(),
+              child: SizedBox(
+                width: scanSize,
+                height: scanSize,
+              ),
+            )),
+            SliderTheme(
+                data: SliderThemeData(
+                    thumbShape: const RoundSliderThumbShape(
+                      enabledThumbRadius: 14.0,
+                      pressedElevation: 8.0,
+                    ),
+                    activeTrackColor: Color.fromRGBO(68, 138, 255, 0.1),
+                    inactiveTrackColor: Color.fromRGBO(68, 138, 255, 0.1),
+                    thumbColor: Color.fromRGBO(19, 60, 150, 1.0)),
+                child: Padding(
+                    padding: EdgeInsets.only(left: screenSize.width / 8),
+                    child: SizedBox(
+                        width: screenSize.width / 2,
+                        child: Slider(
+                          value: _currentSliderValue,
+                          max: 100,
+                          onChanged: (double value) {
+                            setState(() {
+                              _currentSliderValue = value;
+                            });
+                            controller.setZoomScale(value / 100);
+                          },
+                        )))),
+          ])
         ]));
   }
 

@@ -9,7 +9,8 @@ class Results extends StatefulWidget {
   final CupertinoTabController tabController;
   final int myIndex;
 
-  const Results({super.key, required this.tabController, required this.myIndex});
+  const Results(
+      {super.key, required this.tabController, required this.myIndex});
 
   @override
   State<StatefulWidget> createState() => _ResultState();
@@ -26,8 +27,9 @@ class _ResultState extends State<Results> {
     _loadResults();
 
     //detect when tab is open again
-    widget.tabController.addListener(()  {
-      if(widget.tabController.index == widget.myIndex) {
+    widget.tabController.addListener(() {
+      if (widget.tabController.index == widget.myIndex) {
+        print("INDEX_CHANGED");
         _loadResults();
       }
     });
@@ -42,16 +44,27 @@ class _ResultState extends State<Results> {
     }
 
     if (results!.isEmpty) {
-      return Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          spacing: 10,
-          children: [
-            Icon(
-              CupertinoIcons.nosign,
-              size: 150.0,
+      return  RefreshIndicator(
+        onRefresh: _loadResults,
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+            child: Center(child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    CupertinoIcons.nosign,
+                    size: 150.0,
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    locale.noResults,
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
             ),
-            Text(locale.noResults, textAlign: TextAlign.center,)
-          ]);
+          ));
+
     }
 
     return RefreshIndicator(

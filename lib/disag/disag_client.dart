@@ -7,6 +7,8 @@ import 'package:shootbook/models/model_saver.dart';
 import 'package:shootbook/models/shooting/result.dart';
 import "package:shootbook/localizations/app_localizations.dart";
 
+import '../models/backup/backup_client.dart';
+
 String tokenKey = "disagKey";
 FlutterSecureStorage storage = FlutterSecureStorage();
 
@@ -144,8 +146,16 @@ class DisagClient {
     var res = await _qrRequest(qrCodeLink, false);
     Map<String, dynamic> resJson = jsonDecode(await res.stream.bytesToString());
 
+    Result parsedRes = Result.fromDisag(resJson, _locale);
+
     ModelSaver saver = await ModelSaver.getInstance();
-    await saver.save(Result.fromDisag(resJson, _locale));
+    await saver.save(parsedRes);
+
+    BackupClient? client = await BackupClient.getInstance();
+    if (client != null) {
+      client.add(parsedRes);
+    }
+
   }
 
   Future<List<Result>> getAllResults() async {
