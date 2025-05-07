@@ -1,5 +1,5 @@
 import "dart:async";
-
+import "package:animated_snack_bar/animated_snack_bar.dart";
 import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
 import "package:mobile_scanner/mobile_scanner.dart";
@@ -9,7 +9,6 @@ import "package:shootbook/ui/HomeScreen/Tabs/Scanner/scanner_overlay.dart";
 import "package:shootbook/ui/HomeScreen/Tabs/Scanner/scanner_popup.dart";
 
 import "../../../../localizations/app_localizations.dart";
-import "../../../../models/model_saver.dart";
 import "../../../../models/shooting/result.dart";
 import "../../../common/utils.dart";
 import "../../homescreen.dart";
@@ -28,7 +27,9 @@ class Scanner extends StatefulWidget {
 class _ScannerState extends State<Scanner> {
   late AppLocalizations _locale;
   MobileScannerController controller = MobileScannerController(
-      formats: BarcodeFormat.values, useNewCameraSelector: true, cameraResolution: Size(1920, 1080));
+      formats: BarcodeFormat.values,
+      useNewCameraSelector: true,
+      cameraResolution: Size(1920, 1080));
   bool _login = false;
   String? _curUrl;
   Widget? bottomSheet;
@@ -55,14 +56,13 @@ class _ScannerState extends State<Scanner> {
   }
 
   Future<void> _onSaveHandler(Result scannedResult, String url) async {
-    try {
-      _client!.acceptResult(url);
-    } on ResultAlreadyStoredException catch (e) {
-      if (mounted) showSnackBarError(_locale.resultAlreadyStored, context);
+    _client!
+        .acceptResult(url)
+        .then((value) => widget.tabController.index = TabIndex.results,
+            onError: (error) {
+      if (mounted) showSnackBarError(msg: _locale.resultAlreadyStored, context:  context, position: MobileSnackBarPosition.top);
       return;
-    }
-
-    widget.tabController.index = TabIndex.results;
+    });
   }
 
   Future<void> _onDetect(BarcodeCapture capture) async {
@@ -83,7 +83,7 @@ class _ScannerState extends State<Scanner> {
       _curUrl = url;
     } catch (e) {
       if (!mounted || _login) return;
-      showSnackBarError(_locale.loginFailed, context);
+      showSnackBarError(msg: _locale.loginFailed, context: context);
       setState(() {
         _login = true;
         _curUrl = null;
