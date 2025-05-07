@@ -1,14 +1,17 @@
 import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:flutter/material.dart';
 
-void showSnackBarError(String msg, BuildContext context) {
+void showSnackBarError({required String msg, required BuildContext context,
+    MobileSnackBarPosition? position}) {
   AnimatedSnackBar.material(
     msg,
     type: AnimatedSnackBarType.error,
-    mobileSnackBarPosition: MobileSnackBarPosition.bottom,
+    mobileSnackBarPosition: position ?? MobileSnackBarPosition.bottom,
       mobilePositionSettings: MobilePositionSettings(
       bottomOnAppearance: 5,
+        topOnAppearance: 100
       ),
+    snackBarStrategy: RemoveSnackBarStrategy(),
     duration: Duration(seconds: 5)
   ).show(context);
 }

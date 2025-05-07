@@ -96,7 +96,7 @@ class _DisagLoginState extends State<DisagLogin> {
           });
 
           if(mounted) {
-            showSnackBarError(locale.loginFailed, context);
+            showSnackBarError(msg: locale.loginFailed, context: context);
           }
     });
   }

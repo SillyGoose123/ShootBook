@@ -98,7 +98,7 @@ class _OptionsState extends State<Options> {
       });
     } catch (e) {
       if (mounted) {
-        showSnackBarError(locale.importFailed, context);
+        showSnackBarError(msg: locale.importFailed, context: context);
       }
     }
     if (dialogContext != null && dialogContext!.mounted) {

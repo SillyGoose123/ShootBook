@@ -29,7 +29,6 @@ class _ResultState extends State<Results> {
     //detect when tab is open again
     widget.tabController.addListener(() {
       if (widget.tabController.index == widget.myIndex) {
-        print("INDEX_CHANGED");
         _loadResults();
       }
     });
@@ -44,27 +43,39 @@ class _ResultState extends State<Results> {
     }
 
     if (results!.isEmpty) {
-      return  RefreshIndicator(
-        onRefresh: _loadResults,
-        child: SingleChildScrollView(
-          physics: const AlwaysScrollableScrollPhysics(),
-            child: Center(child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    CupertinoIcons.nosign,
-                    size: 150.0,
-                  ),
-                  const SizedBox(height: 10),
-                  Text(
-                    locale.noResults,
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              ),
+      return  Stack(
+        children: [
+          // This scrollable layer is needed just to trigger the RefreshIndicator
+          RefreshIndicator(
+            onRefresh: _loadResults,
+            child: ListView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              children: [
+                // Make it tall enough to enable pull-to-refresh
+                Container(height: MediaQuery.of(context).size.height),
+              ],
             ),
-          ));
+          ),
 
+          // This stays centered and doesn't move
+          Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  CupertinoIcons.nosign,
+                  size: 150.0,
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  locale.noResults,
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ),
+        ],
+      );
     }
 
     return RefreshIndicator(
