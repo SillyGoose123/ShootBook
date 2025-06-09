@@ -4,11 +4,16 @@ import 'package:shootbook/models/shooting/result.dart';
 import "package:shootbook/localizations/app_localizations.dart";
 import '../models/shooting/result_type.dart';
 
-List<Result> gatherAllResults(List<dynamic> json, AppLocalizations locale) {
-  List<Result> results = [];
+
+List<dynamic> gatherAllResults(List<dynamic> json, AppLocalizations locale) {
+  List<dynamic> results = [];
 
   for (final Map<String, dynamic> result in json) {
-    results.add(Result.fromDisag(result, locale));
+    try {
+      results.add(Result.fromDisag(result, locale));
+    } catch(e) {
+      results.add("Test $e");
+    }
   }
 
   return results;
@@ -35,6 +40,26 @@ ResultType typeFromDisag(String disagType) {
     case "50_6":
     case "300_4":
       return ResultType.lp40;
+
+    case "400_1":
+      return ResultType.kk10;
+
+    case "400_2":
+      return ResultType.kk3x20;
+
+    case "400_4":
+      return ResultType.kk40;
+
+    case "400_6":
+      return ResultType.kk60;
+
+    case "500_1":
+      return ResultType.kk3x10;
+
+    case "500_2":
+      return ResultType.kk3x20;
+
+
 
     default:
       throw Exception("Unknown Disag type: $disagType");
@@ -65,12 +90,12 @@ Future<void> deleteAllResults(AppLocalizations locale) async {
   //gather all results
   List<Result> results = await saver.load(true);
   List<dynamic> disagResults = await client.makeResultReq();
-  List<Result> parsedDisagResults = gatherAllResults(disagResults, locale);
+  List<dynamic> parsedDisagResults = gatherAllResults(disagResults, locale);
 
   //search & delete results
   for (final Result result in results) {
     int index = parsedDisagResults
-        .indexWhere((Result res) => res.toString() == result.toString());
+        .indexWhere((dynamic res) => res.toString() == result.toString());
     if (index == -1) continue;
 
     await client.deleteResult(disagResults[index]["id"]);

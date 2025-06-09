@@ -72,6 +72,11 @@ class AppLocalizationsDe extends AppLocalizations {
   String get resultAlreadyStored => 'Result ist schon gespeichert.';
 
   @override
+  String resultAlreadyStoredName(String name) {
+    return 'Result $name ist schon gespeichert.';
+  }
+
+  @override
   String get export => 'Exportieren';
 
   @override

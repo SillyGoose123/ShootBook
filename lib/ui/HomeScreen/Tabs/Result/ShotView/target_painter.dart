@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:shootbook/ui/HomeScreen/Tabs/Result/ShotView/utils.dart';
 import '../../../../../models/shooting/result.dart';
 import '../../../../../models/shooting/result_type.dart';
 
 class TargetPainter extends CustomPainter {
   Result result;
   TargetPainter(this.result);
+  late double scaler;
 
   @override
   void paint(Canvas canvas, Size size) {
+    scaler = size.width / result.type.getScalerFactor();
+
     //draw base
     var paint = Paint()
       ..color = Colors.white;
@@ -18,8 +22,7 @@ class TargetPainter extends CustomPainter {
     //draw inner black
     var innerCircle = Paint()
       ..color = Colors.black;
-    canvas.drawCircle(center, size.width / 3.2, innerCircle);
-
+    canvas.drawCircle(center, mmToPixel(result.type.getMirrorWidth() / 2) * scaler, innerCircle);
 
     //draw value circles
     var circlePaint = Paint()
@@ -27,9 +30,8 @@ class TargetPainter extends CustomPainter {
       ..strokeWidth = 0.75
       ..style = PaintingStyle.stroke;
 
-
-    for (var i = 0; i < 11; i++) {
-      circlePaint.color = i >= 3 ? Colors.white : Colors.black;
+    for (var i = 0; i < 10; i++) {
+      circlePaint.color = i <= 6 ? Colors.white : Colors.black;
 
       double radius = _calcRadius(size, i);
 
@@ -38,34 +40,32 @@ class TargetPainter extends CustomPainter {
 
       //draw the number
       if(i == 0 || i > 8) continue;
-      _drawNumber(canvas, size, 9 - i, radius);
+      _drawNumber(canvas, size, i, radius, circlePaint.color);
     }
   }
 
   @override
   bool shouldRepaint(covariant TargetPainter oldDelegate) => result != oldDelegate.result;
 
-  double _calcRadius(Size size, i) {
-    /*  print("size: ${size}");
-    print("result multiplier: ${(result.type.getTargetMultiplier() / size.width)}");
-    print("=${((size.height - (i * result.type.getTargetMultiplier())) / 2)}");*/
-    return ((size.height - (i * result.type.getTargetMultiplier())) / 2);
+  double _calcRadius(Size size, int i) {
+    double radius = result.type.getSmallestRadius() + i * result.type.getRadiusDistance();
+    return mmToPixel(radius) * scaler;
   }
 
-  void _drawNumber(Canvas canvas, Size size, int i, double radius) {
-    final textStyle = TextStyle(color: i < 4 ? Colors.black : Colors.white, fontSize: 5);
-    final textSpan = TextSpan(text: i.toString(), style: textStyle);
+  void _drawNumber(Canvas canvas, Size size, int i, double radius, Color color) {
+    final textStyle = TextStyle(color: color, fontSize: 5);
+    final textSpan = TextSpan(text: (9 - i).toString(), style: textStyle);
     final textPainter = TextPainter(
       text: textSpan,
       textDirection: TextDirection.ltr,
     );
     textPainter.layout();
 
-    final offsetLeft = Offset((radius + 2),
+    final offsetLeft = Offset(radius + scaler,
         (size.height /2) - textPainter.height / 2);
     textPainter.paint(canvas, offsetLeft);
 
-    final offsetRight = Offset((2 * 48 - radius),
+    /*final offsetRight = Offset((2 * 48 - radius),
         (size.height /2) - textPainter.height / 2);
     textPainter.paint(canvas, offsetRight);
 
@@ -73,7 +73,7 @@ class TargetPainter extends CustomPainter {
     textPainter.paint(canvas, offsetTop);
 
     final offsetBottom = Offset((size.width /2 ) - textPainter.width / 2, 2 * 47 - radius);
-    textPainter.paint(canvas, offsetBottom);
+    textPainter.paint(canvas, offsetBottom);*/
   }
 }
 

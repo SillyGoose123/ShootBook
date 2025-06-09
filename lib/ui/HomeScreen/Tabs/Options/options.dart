@@ -86,12 +86,26 @@ class _OptionsState extends State<Options> {
     try {
       DisagClient client = await DisagClient.getInstance(locale);
       _showLoadingDialog(locale.importingDisagResults);
-      List<Result> res = await client.getAllResults();
+      List<dynamic> res = await client.getAllResults();
 
       ModelSaver saver = await ModelSaver.getInstance();
-      if (mounted) {
-        await saver.saveAll(res, context);
+      for (dynamic result in res) {
+        if (result.runtimeType == Result) {
+          try {
+            await saver.save(result);
+          } on ResultAlreadyStoredException catch(e) {
+            if (mounted) {
+              showSnackBarError(msg: locale.resultAlreadyStoredName(result.toString()), context: context);
+            }
+          }
+          continue;
+        }
+
+        if (mounted) {
+          showSnackBarError(msg: result, context: context);
+        }
       }
+
     } on TokenException catch (e) {
       setState(() {
         login = true;

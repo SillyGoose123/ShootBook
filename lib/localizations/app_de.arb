@@ -30,6 +30,14 @@
   "yesCloud": "Ja und auch in Cloud",
 
   "resultAlreadyStored": "Result ist schon gespeichert.",
+  "resultAlreadyStoredName": "Result {name} ist schon gespeichert.",
+  "@resultAlreadyStoredName": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "export": "Exportieren",
   "import": "Importieren",
   "qrCodeScanFailed": "Qr Code konnte nicht gelesen werden.",
