@@ -10,12 +10,12 @@ class ShootPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    var shootPaint = Paint();
+   /* var shootPaint = Paint();
 
     for(Shot shot in result.getAllShots()) {
       shootPaint.color = shot.getValueColor();
       canvas.drawCircle(shot.getOffsetCoordinate(size), 5, shootPaint);
-    }
+    }*/
   }
 
   @override

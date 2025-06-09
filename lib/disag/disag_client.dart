@@ -158,7 +158,7 @@ class DisagClient {
 
   }
 
-  Future<List<Result>> getAllResults() async {
+  Future<List<dynamic>> getAllResults() async {
     var res = await makeResultReq();
     return gatherAllResults(res, _locale);
   }

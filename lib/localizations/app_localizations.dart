@@ -221,6 +221,12 @@ abstract class AppLocalizations {
   /// **'Result ist schon gespeichert.'**
   String get resultAlreadyStored;
 
+  /// No description provided for @resultAlreadyStoredName.
+  ///
+  /// In de, this message translates to:
+  /// **'Result {name} ist schon gespeichert.'**
+  String resultAlreadyStoredName(String name);
+
   /// No description provided for @export.
   ///
   /// In de, this message translates to:
