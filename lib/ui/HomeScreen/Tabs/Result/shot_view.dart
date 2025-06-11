@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:shootbook/models/shooting/result.dart';
-import 'package:shootbook/models/shooting/result_type.dart';
 
 import '../../../../models/shooting/shot.dart';
 
@@ -72,10 +71,7 @@ class TargetPainter extends CustomPainter {
   bool shouldRepaint(covariant TargetPainter oldDelegate) => result != oldDelegate.result;
 
   double _calcRadius(Size size, i) {
-  /*  print("size: ${size}");
-    print("result multiplier: ${(result.type.getTargetMultiplier() / size.width)}");
-    print("=${((size.height - (i * result.type.getTargetMultiplier())) / 2)}");*/
-    return ((size.height - (i * result.type.getTargetMultiplier())) / 2);
+    throw UnimplementedError();
   }
 
   void _drawNumber(Canvas canvas, Size size, int i, double radius) {
@@ -122,21 +118,6 @@ class ShootPainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant ShootPainter oldDelegate) =>
       result != oldDelegate.result;
-}
-
-extension ResultTypeTargetEx on ResultType {
-  int getTargetMultiplier() {
-    switch (this) {
-      case ResultType.lp10:
-      case ResultType.lp20:
-      case ResultType.lp40:
-      case ResultType.lp60:
-        return 10;
-
-      default:
-        return 12;
-    }
-  }
 }
 
 extension ShotTargetEx on Shot {

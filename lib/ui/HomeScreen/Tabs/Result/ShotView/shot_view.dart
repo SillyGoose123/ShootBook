@@ -5,7 +5,7 @@ import 'package:shootbook/ui/HomeScreen/Tabs/Result/ShotView/target_painter.dart
 
 class ShotView extends StatefulWidget {
   final Result result;
-  final int size;
+  final double size;
 
   const ShotView({super.key, required this.result, required this.size});
 
@@ -22,7 +22,7 @@ class _ShotViewState extends State<ShotView> {
         child: CustomPaint(
           foregroundPainter: ShootPainter(widget.result),
           painter: TargetPainter(widget.result),
-          size: Size(widget.size.toDouble(), widget.size.toDouble()),
+          size: Size(widget.size, widget.size),
         ),
       );
   }

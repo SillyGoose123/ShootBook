@@ -4,14 +4,13 @@ import 'package:shootbook/models/shooting/result.dart';
 import "package:shootbook/localizations/app_localizations.dart";
 import '../models/shooting/result_type.dart';
 
-
 List<dynamic> gatherAllResults(List<dynamic> json, AppLocalizations locale) {
   List<dynamic> results = [];
 
   for (final Map<String, dynamic> result in json) {
     try {
       results.add(Result.fromDisag(result, locale));
-    } catch(e) {
+    } catch (e) {
       results.add("Test $e");
     }
   }
@@ -19,51 +18,32 @@ List<dynamic> gatherAllResults(List<dynamic> json, AppLocalizations locale) {
   return results;
 }
 
-ResultType typeFromDisag(String disagType) {
-  switch (disagType) {
-    //lg 20
-    case "50_1":
-    case "100_2":
-      return ResultType.lg20;
+class UnknownDisagTypeException implements Exception {
 
-    //lg 40
-    case "50_2":
-    case "100_4":
-      return ResultType.lg40;
+}
 
-    //lp 20
-    case "50_5":
-    case "300_2":
-      return ResultType.lp20;
+(ResultType, int) parseDisagType(String disagType) {
+  List<int> split = disagType.split("_").map((val) => int.parse(val)).toList();
 
-    //lp 40
-    case "50_6":
-    case "300_4":
-      return ResultType.lp40;
-
-    case "400_1":
-      return ResultType.kk10;
-
-    case "400_2":
-      return ResultType.kk3x20;
-
-    case "400_4":
-      return ResultType.kk40;
-
-    case "400_6":
-      return ResultType.kk60;
-
-    case "500_1":
-      return ResultType.kk3x10;
-
-    case "500_2":
-      return ResultType.kk3x20;
-
-
-
-    default:
-      throw Exception("Unknown Disag type: $disagType");
+  if(split[0] == 50) {
+    return switch(split[1]) {
+      1 => (ResultType.lg, 20),
+      2 => (ResultType.lg, 40),
+      5 => (ResultType.lp, 20),
+      6 => (ResultType.lp, 40),
+      _ => throw UnknownDisagTypeException()
+    };
   }
+
+  ResultType type = switch (split[0]) {
+    100 => ResultType.lg,
+    300 => ResultType.lp,
+    400 => ResultType.kk,
+    500 => ResultType.kk3x,
+    _ => throw UnknownDisagTypeException()
+  };
+
+  return (type, split[1] * 10);
 }
 
 bool isNewTime(String disagType) {
