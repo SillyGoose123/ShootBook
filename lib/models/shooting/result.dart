@@ -28,7 +28,10 @@ class Result {
   @JsonKey(required: true)
   final DateTime timestamp;
 
-  Result(this.series, this.value, this.type, this.comment, this.timestamp);
+  @JsonKey(required: true)
+  final int competitionShotCount;
+
+  Result(this.series, this.value, this.type, this.comment, this.timestamp, this.competitionShotCount);
 
   factory Result.fromDisag(Map<String, dynamic> json, AppLocalizations locale) {
     List<Series> series = [];
@@ -39,10 +42,9 @@ class Result {
         (json["data"]["results"] as List<dynamic>).indexed;
 
     final String disagType = json["discipline_id"] as String;
-    final ResultType type = typeFromDisag(disagType);
+    final (ResultType type, int competitionShotCount) = parseDisagType(disagType);
 
-    int practiceShootCount = jsonShots.length - type.getShootCount();
-
+    int practiceShootCount = jsonShots.length - competitionShotCount;
     for (final (index, Map<String, dynamic> jsonShot) in jsonShots) {
       Shot shot = Shot.fromDisag(jsonShot);
       shots.add(shot);
@@ -64,7 +66,7 @@ class Result {
     // round value with precision 2
     value = double.parse(value.toStringAsFixed(2));
 
-    return Result(series, value, type, comment, time);
+    return Result(series, value, type, comment, time, competitionShotCount);
   }
 
   //JSON parse/encode
@@ -92,8 +94,10 @@ class Result {
     return series.expand((list) => list.shots).toList();
   }
 
+  String get disciplineClass => "$type$competitionShotCount";
+
   String toFileString() {
-    return "${type.toText()}_${formatDate(timestamp.toLocal())}.json";
+    return "${disciplineClass}_${formatDate(timestamp.toLocal())}.json";
   }
 
   String formatTime() {
@@ -104,6 +108,6 @@ class Result {
 
   @override
   String toString() {
-    return "${type.toText()}_${formatTime()}";
+    return "${disciplineClass}_${formatTime()}";
   }
 }

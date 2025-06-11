@@ -1,7 +1,11 @@
 // https://api.flutter.dev/flutter/dart-ui/FlutterView/devicePixelRatio.html
-// flutters logical pixels which means 38 pixel are on centimeter
+// fFlutter works with logical pixels where 1cm == 39px
 
 double mmToPixel(double mm) {
-  return (mm / 10) * 38;
+  return mm * (38 / 10);
+}
+
+double pixelToMm(double pixels) {
+  return  pixels / (38 / 10);
 }
 

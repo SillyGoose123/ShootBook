@@ -10,9 +10,7 @@ import 'package:shootbook/models/shooting/result.dart';
 import 'package:shootbook/models/shooting/result_type.dart';
 import 'package:shootbook/ui/common/utils.dart';
 
-class ResultAlreadyStoredException implements Exception {
-  ResultAlreadyStoredException(String s);
-}
+class ResultAlreadyStoredException implements Exception {}
 
 //https://docs.flutter.dev/cookbook/persistence/reading-writing-files
 class ModelSaver {
@@ -64,7 +62,7 @@ class ModelSaver {
   Future<void> save(Result result) async {
     if (_storedResults[result.type] != null &&
         containsResult(_storedResults[result.type]!, result)) {
-      throw ResultAlreadyStoredException("Result already stored.");
+      throw ResultAlreadyStoredException();
     }
 
     if (_storedResults[result.type] == null) _storedResults[result.type] = [];

@@ -43,7 +43,7 @@ class _ScannerBottomSheetState extends State<ScannerBottomSheet> {
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    "${widget.result.type.toText()} ${widget.result.calcNonTenthValue()}",
+                    "${widget.result.type} ${widget.result.calcNonTenthValue()}",
                     style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,

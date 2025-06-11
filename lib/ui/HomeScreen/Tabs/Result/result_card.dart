@@ -11,15 +11,14 @@ class ResultCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
         padding: EdgeInsets.all(5),
-        child: Row(
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           spacing: 10,
           children: [
-            ShotView(result: result, size: 200
-            ,),
+            ShotView(result: result, size: 300),
             Column(
               children: [
-                Text(result.type.toText()),
+                Text(result.disciplineClass),
                 Text(result.formatTime()),
                 Row(
                   spacing: 10,
