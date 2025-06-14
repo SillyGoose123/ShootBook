@@ -60,11 +60,14 @@ enum ResultType {
 
   double get radiusOf10 => diameterOf10 / 2;
   double get mirrorRadius => mirrorWidth / 2;
-  double get mirrorNumberAmount => (mirrorWidth / valueDistance) / 2;
   double? get innerTenRadius {
     if(inner10 == null) return null;
     return inner10! / 2;
   }
+
+  int get inAmountBlack => (mirrorWidth / valueDistance  / 2).round();
+  // if inner ten the mirror is larger
+  int get mirrorNumberAmount => inAmountBlack - (inner10 == null ? 1 : 2);
 
   @override
   String toString() => _$ResultTypeEnumMap[this]!;
