@@ -15,8 +15,8 @@ enum ResultType {
   lp(
       diameterOf10: 11.5,
       valueDistance: 8,
-      targetWidth: 45.5,
-      mirrorWidth: 30.5,
+      targetWidth: 155.5,
+      mirrorWidth: 59.5,
       inner10: 5),
   @JsonValue("KK")
   kk(
@@ -61,6 +61,10 @@ enum ResultType {
   double get radiusOf10 => diameterOf10 / 2;
   double get mirrorRadius => mirrorWidth / 2;
   double get mirrorNumberAmount => (mirrorWidth / valueDistance) / 2;
+  double? get innerTenRadius {
+    if(inner10 == null) return null;
+    return inner10! / 2;
+  }
 
   @override
   String toString() => _$ResultTypeEnumMap[this]!;

@@ -14,7 +14,7 @@ class TargetPainter extends CustomPainter {
     //draw base
     var paint = Paint()
       ..color = Colors.white;
-    canvas.drawRect(Offset.zero & Size(size.width, size.height), paint);
+    canvas.drawRect(Offset.zero & size, paint);
 
     final Offset center = Offset(size.width / 2, size.height / 2);
 
@@ -41,6 +41,13 @@ class TargetPainter extends CustomPainter {
       //draw the number
       if(i == 9 || i == 0) continue;
       _drawNumber(canvas, size, i, radius);
+    }
+
+    //draw inner ten
+    double? innerTen = result.type.innerTenRadius;
+    if(innerTen != null) {
+      circlePaint.color = Colors.white;
+      canvas.drawCircle(center, innerTen, circlePaint);
     }
   }
 
