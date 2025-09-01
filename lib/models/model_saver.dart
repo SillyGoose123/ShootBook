@@ -8,7 +8,7 @@ import 'package:path_provider/path_provider.dart';
 import "package:shootbook/localizations/app_localizations.dart";
 import 'package:shootbook/models/shooting/result.dart';
 import 'package:shootbook/models/shooting/result_type.dart';
-import 'package:shootbook/ui/common/utils.dart';
+import 'package:shootbook/ui/utils.dart';
 
 class ResultAlreadyStoredException implements Exception {}
 
@@ -25,12 +25,15 @@ class ModelSaver {
   static Future<ModelSaver> getInstance() async {
     final appDir = await getApplicationDocumentsDirectory();
     Directory dir = Directory("${appDir.path}/results");
-
-    if (!await dir.exists()) {
-      dir = await dir.create();
+    Directory backupDir = Directory("${appDir.path}/backup");
+    if(!await dir.exists()) {
+      await dir.create();
+    }
+    if(!await backupDir.exists()) {
+      await backupDir.create();
     }
 
-    _instance ??= ModelSaver._create(dir, Directory("${appDir.path}/backups"));
+    _instance ??= ModelSaver._create(dir, backupDir);
     return _instance!;
   }
 
@@ -83,7 +86,6 @@ class ModelSaver {
     if ((loadAgain != null && loadAgain) || !_loaded) {
       _loaded = true;
       _storedResults = {};
-      //load if not loaded before
       await _load();
     }
 

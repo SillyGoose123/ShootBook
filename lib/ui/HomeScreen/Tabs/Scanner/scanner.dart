@@ -10,8 +10,9 @@ import "package:shootbook/ui/HomeScreen/Tabs/Scanner/scanner_popup.dart";
 
 import "../../../../localizations/app_localizations.dart";
 import "../../../../models/shooting/result.dart";
-import "../../../common/utils.dart";
+import "../../../utils.dart";
 import "../../homescreen.dart";
+
 
 class Scanner extends StatefulWidget {
   final CupertinoTabController tabController;

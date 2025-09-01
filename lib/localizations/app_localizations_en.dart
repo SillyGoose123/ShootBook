@@ -1,3 +1,5 @@
+// ignore: unused_import
+import 'package:intl/intl.dart' as intl;
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -16,13 +18,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get password => 'Password';
 
   @override
-  String get disagLoginExplanation => 'Email & Password aren\'t stored on your device. Only a temporary access token.';
+  String get disagLoginExplanation =>
+      'Email & Password aren\'t stored on your device. Only a temporary access token.';
 
   @override
   String get loginDisag => 'Login to Disag';
 
   @override
-  String get noResults => 'No results found. Scan or import them in the settings.';
+  String get noResults =>
+      'No results found. Scan or import them in the settings.';
 
   @override
   String get importDisagResults => 'Import Disag Results';

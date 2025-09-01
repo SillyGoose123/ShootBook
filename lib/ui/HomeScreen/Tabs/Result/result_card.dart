@@ -15,7 +15,7 @@ class ResultCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           spacing: 10,
           children: [
-            ShotView(result: result, size: 200),
+            ShotView(result: result, size: 300),
             Column(
               children: [
                 Text(result.disciplineClass),

@@ -3,13 +3,13 @@ import 'package:shootbook/ui/HomeScreen/Tabs/Result/ShotView/utils.dart';
 import '../../../../../models/shooting/result.dart';
 
 class TargetPainter extends CustomPainter {
-  Result result;
-  TargetPainter(this.result);
-  late final double scaler;
+  final Result result;
+  final double scaler;
+  TargetPainter(this.result, this.scaler);
+
 
   @override
   void paint(Canvas canvas, Size size) {
-    scaler = pixelToMm(size.width - 5) / result.type.targetWidth;
 
     //draw base
     var paint = Paint()

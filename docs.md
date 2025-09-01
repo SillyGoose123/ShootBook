@@ -59,17 +59,22 @@ Implemented in disag utils.
 | KK3x10 | 500_1   | -                                     |
 | KK3x20 | 500_2   | -                                     |
 
+## Disag Measurement Frame Details
+Measurement field size: 170x170 mm
+This leads to x,y / 
+
+
 
 # Target values
 Represented by ResultType Enum.
 
-| Discipline | 10 Diameter | Value Distance | Target Width | Mirror Width | Inner 10                              |
-|------------|-------------|----------------|--------------|--------------|---------------------------------------|
-| LG         | 0.5 mm      | 2.5 mm         | 45.5 mm      | 30.5 mm      | - (Exists ≥10.2 but not drawn by App) |
-| LP         | 11.5 mm     | 8 mm           | 155.5 mm     | 59.5 mm      | 5 mm                                  |
-| KK         | 10.4 mm     | 8 mm           | 154.4 mm     | 112.4 mm     | 5 mm                                  |
-| KK PP      | 50 mm       | 25 mm          | 500 mm       | 200 mm       | 25 mm                                 |
-| KK PD      | 100 mm      | 40 mm          | 500 mm       | 200 mm       | 50 mm                                 | 
+| Discipline | 10 Diameter | Value Distance | Target Width | Mirror Width | Shot Diameter | Inner 10                              |
+|------------|-------------|----------------|--------------|--------------|---------------|---------------------------------------|
+| LG         | 0.5 mm      | 2.5 mm         | 45.5 mm      | 30.5 mm      | 4.5 mm        | - (Exists ≥10.2 but not drawn by App) |
+| LP         | 11.5 mm     | 8 mm           | 155.5 mm     | 59.5 mm      | 4.5 mm        | 5 mm                                  |
+| KK         | 10.4 mm     | 8 mm           | 154.4 mm     | 112.4 mm     | 5.6 mm        | 5 mm                                  |
+| KK PP      | 50 mm       | 25 mm          | 500 mm       | 200 mm       | 5.6 mm        | 25 mm                                 |
+| KK PD      | 100 mm      | 40 mm          | 500 mm       | 200 mm       | 5.6 mm        | 50 mm                                 | 
 
 Amount of numbers in mirror:
 ```math

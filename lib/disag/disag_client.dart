@@ -13,7 +13,7 @@ String tokenKey = "disagKey";
 FlutterSecureStorage storage = FlutterSecureStorage();
 
 class TokenException implements Exception {
-  TokenException(String s);
+  TokenException(String message);
 
 }
 

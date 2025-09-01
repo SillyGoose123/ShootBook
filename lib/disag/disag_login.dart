@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:shootbook/disag/disag_client.dart';
 import 'package:shootbook/disag/disag_utils.dart';
 import "package:shootbook/localizations/app_localizations.dart";
-import 'package:shootbook/ui/common/utils.dart';
+import 'package:shootbook/ui/utils.dart';
 
 class DisagLogin extends StatefulWidget {
   const DisagLogin({super.key, required this.onLogin});

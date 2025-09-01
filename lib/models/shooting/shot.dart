@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'shot.g.dart';
+
 @JsonSerializable()
 class Shot {
   @JsonKey(required: true)

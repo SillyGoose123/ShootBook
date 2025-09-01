@@ -10,27 +10,34 @@ enum ResultType {
       diameterOf10: 0.5,
       valueDistance: 2.5,
       targetWidth: 45.5,
-      mirrorWidth: 30.5),
+      mirrorWidth: 30.5,
+      shotDiameter: 4.5
+  ),
   @JsonValue("LP")
   lp(
       diameterOf10: 11.5,
       valueDistance: 8,
       targetWidth: 155.5,
       mirrorWidth: 59.5,
-      inner10: 5),
+      inner10: 5,
+      shotDiameter: 4.5
+  ),
   @JsonValue("KK")
   kk(
       diameterOf10: 10.4,
       valueDistance: 8,
       targetWidth: 154.4,
       mirrorWidth: 112.4,
-      inner10: 5),
+      shotDiameter: 5.6,
+      inner10: 5,
+  ),
   @JsonValue("KK 3x")
   kk3x(
       diameterOf10: 10.4,
       valueDistance: 8,
       targetWidth: 154.4,
       mirrorWidth: 112.4,
+      shotDiameter: 5.6,
       inner10: 5),
   @JsonValue("KK PP")
   kkPP(
@@ -38,6 +45,7 @@ enum ResultType {
       valueDistance: 25,
       targetWidth: 500,
       mirrorWidth: 200,
+      shotDiameter: 5.6,
       inner10: 25),
   @JsonValue("KK KD")
   kkPD(
@@ -45,6 +53,7 @@ enum ResultType {
       valueDistance: 40,
       targetWidth: 500,
       mirrorWidth: 200,
+      shotDiameter: 5.6,
       inner10: 50);
 
   const ResultType({
@@ -52,14 +61,16 @@ enum ResultType {
     required this.valueDistance,
     required this.targetWidth,
     required this.mirrorWidth,
+    required this.shotDiameter,
     this.inner10,
   });
 
-  final double diameterOf10, valueDistance, targetWidth, mirrorWidth;
+  final double diameterOf10, valueDistance, targetWidth, mirrorWidth, shotDiameter;
   final double? inner10;
 
   double get radiusOf10 => diameterOf10 / 2;
   double get mirrorRadius => mirrorWidth / 2;
+  double get shotRadius => shotDiameter / 2;
   double? get innerTenRadius {
     if(inner10 == null) return null;
     return inner10! / 2;

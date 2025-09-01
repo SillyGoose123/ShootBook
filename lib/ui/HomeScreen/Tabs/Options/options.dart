@@ -10,7 +10,7 @@ import 'package:shootbook/models/backup/backup_client.dart';
 import 'package:shootbook/models/model_saver.dart';
 import 'package:shootbook/disag/disag_login.dart';
 import 'package:shootbook/ui/HomeScreen/Tabs/Options/backup_type_select.dart';
-import 'package:shootbook/ui/common/utils.dart';
+import 'package:shootbook/ui/utils.dart';
 import 'package:shootbook/models/shooting/result.dart';
 
 class Options extends StatefulWidget {
