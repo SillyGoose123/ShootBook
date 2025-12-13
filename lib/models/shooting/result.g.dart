@@ -18,14 +18,14 @@ Result _$ResultFromJson(Map<String, dynamic> json) {
     ],
   );
   return Result(
-    (json['series'] as List<dynamic>)
-        .map((e) => Series.fromJson(e as Map<String, dynamic>))
-        .toList(),
     (json['value'] as num).toDouble(),
     $enumDecode(_$ResultTypeEnumMap, json['type']),
     json['comment'] as String? ?? '',
     DateTime.parse(json['timestamp'] as String),
     (json['competitionShotCount'] as num).toInt(),
+    (json['series'] as List<dynamic>)
+        .map((e) => Series.fromJson(e as Map<String, dynamic>))
+        .toList(),
   );
 }
 

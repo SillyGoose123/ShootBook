@@ -14,9 +14,6 @@ part "result.g.dart";
 @JsonSerializable()
 class Result {
   @JsonKey(required: true)
-  final List<Series> series;
-
-  @JsonKey(required: true)
   final double value;
 
   @JsonKey(required: true)
@@ -31,7 +28,10 @@ class Result {
   @JsonKey(required: true)
   final int competitionShotCount;
 
-  Result(this.series, this.value, this.type, this.comment, this.timestamp, this.competitionShotCount);
+  @JsonKey(required: true)
+  final List<Series> series;
+
+  Result(this.value, this.type, this.comment, this.timestamp, this.competitionShotCount, this.series);
 
   factory Result.fromDisag(Map<String, dynamic> json, AppLocalizations locale) {
     List<Series> series = [];
@@ -66,7 +66,7 @@ class Result {
     // round value with precision 2
     value = double.parse(value.toStringAsFixed(2));
 
-    return Result(series, value, type, comment, time, competitionShotCount);
+    return Result(value, type, comment, time, competitionShotCount, series);
   }
 
   //JSON parse/encode

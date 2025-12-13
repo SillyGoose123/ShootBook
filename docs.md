@@ -1,7 +1,9 @@
-# Shoots API 
+# Shoots API
+
 body type: multipart/form-data
 
 ## Endpoints
+
     Token:
         url: https://shotsapp.disag.de/api/token
         method: POST
@@ -32,11 +34,13 @@ body type: multipart/form-data
 # Math
 
 ## Divider
+
 ```math
 $\frac{\sqrt{x²+y²} * 20}{20}
 ```
 
 ## Direction
+
 ```math
 $\frac{\atan2(y, x) * 180}{pi} + 224
 ```
@@ -44,6 +48,7 @@ $\frac{\atan2(y, x) * 180}{pi} + 224
 # Disag data parsing
 
 ## ID
+
 Implemented in disag utils.
 
 | OurID  | DisagID | Disag NEU Schießzeiten (=New Time ID) |
@@ -60,12 +65,12 @@ Implemented in disag utils.
 | KK3x20 | 500_2   | -                                     |
 
 ## Disag Measurement Frame Details
+
 Measurement field size: 170x170 mm
-This leads to x,y / 
-
-
+This leads to x,y /
 
 # Target values
+
 Represented by ResultType Enum.
 
 | Discipline | 10 Diameter | Value Distance | Target Width | Mirror Width | Shot Diameter | Inner 10                              |
@@ -77,24 +82,48 @@ Represented by ResultType Enum.
 | KK PD      | 100 mm      | 40 mm          | 500 mm       | 200 mm       | 5.6 mm        | 50 mm                                 | 
 
 Amount of numbers in mirror:
+
 ```math
 \frac{Mirror Width}{Diameter Multiplier} : 2
 ```
 
+# Coordinate Stuff
+
+## Test Import
+
+| Ring | Disag Value(x:y) | Expect value (ca. in a 50/50) (x:y) |
+|------|------------------|-------------------------------------|
+| 9.9  | -249:113         | 22:24                               |
+| 10.0 | -166:-181        | 24:26                               |
+| 0.0  | 2566:2190        | 45:2                                |
+| 2.2  | -1628:1446       | 9:8                                 |
+| 6.5  | -1095:-182       | 15:26                               |
+| 4.1  | 1389:-994        | 32:32                               |
+| 0.0  | -1357:-2158      | 10:40                               | 
+
+1. Assume 0:0 ist center.
+2. Pixel and mm => [Flutter mm to px](#Pixel-to-mm)
+3. Scale down => how much?
+4. Move on x & y axis to remove negatives => how much?
 
 Source: https://www.dsb.de/fileadmin/DSB.DE/PDF/PDF_2020/Zielscheiben_DSB_SpO_2014.pdf
 
 # Flutter stuff
 
 ## Pixel to mm
-Flutter works with logical pixels where 1cm == 39px
+
+Flutter works with logical pixels where 1cm == 38px
 
 pixel to mm:
+
 ```math
 pixels : \frac{38}{10}
 ```
 
 mm to pixel:
+
 ```math
 mm * \frac{38}{10}
 ```
+
+Source: https://api.flutter.dev/flutter/dart-ui/FlutterView/devicePixelRatio.html
