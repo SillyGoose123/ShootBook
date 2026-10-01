@@ -1,8 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shootbook/models/backup/backup_type.dart';
 
-
-
 class Settings {
   static Settings? _instance;
   final SharedPreferences _prefs;

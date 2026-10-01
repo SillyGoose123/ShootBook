@@ -7,7 +7,6 @@ import 'backup_type.dart';
 abstract class BackupClient {
   static BackupClient? _instance;
 
-
   static Future<BackupClient?> getInstance() async {
     Settings settings = await Settings.getInstance();
     switch(settings.backup) {

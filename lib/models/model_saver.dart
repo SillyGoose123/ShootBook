@@ -23,6 +23,7 @@ class ModelSaver {
   ModelSaver._create(this._directory, this._backupDirectory);
 
   static Future<ModelSaver> getInstance() async {
+//    if(_instance == null) return _instance!;
     final appDir = await getApplicationDocumentsDirectory();
     Directory dir = Directory("${appDir.path}/results");
     Directory backupDir = Directory("${appDir.path}/backup");

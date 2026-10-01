@@ -26,8 +26,6 @@ dependencies:
   drive_helper: ^1.4.1
   mobile_scanner: ^6.0.7
 
-
-
 dev_dependencies:
   flutter_test:
     sdk: flutter
